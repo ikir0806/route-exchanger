@@ -8,7 +8,7 @@ function Header() {
     <div className='header'>
       <Link className='icon' to='/'>
         <FontAwesomeIcon icon={faMap} className='icon-img' />
-        <h1 className='icon-text'>Router</h1>
+        <h1 className='icon-text'>Tutochka</h1>
       </Link>
       <Link className='profile' to='/profile'>
         <FontAwesomeIcon icon={faUser} className='profile-img' />
