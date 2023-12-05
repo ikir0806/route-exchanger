@@ -1,0 +1,62 @@
+@import 'normalize.css';
+@import './variables.scss';
+
+body {
+  padding: 0 20px 0 20px;
+  background-color: $sea-green;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.icon {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.icon-img {
+  color: $white;
+  width: 50px;
+  height: 50px;
+}
+
+.icon-text {
+  color: $white;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+}
+
+.profile-img {
+  color: $white;
+  width: 40px;
+  height: 40px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+  margin: auto;
+  width: 50%;
+}
+
+.search-icon {
+  color: $sea-green;
+  left: 45px;
+  position: relative;
+}
+
+.search-input {
+  border: none;
+  border-radius: 16px;
+  width: 100%;
+  height: 50px;
+  padding-left: 50px;
+}
