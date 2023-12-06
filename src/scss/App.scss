@@ -2,10 +2,48 @@
 @import './variables.scss';
 
 body {
-  padding: 2vh;
+  // padding: 2vh;
   background-color: $sea-green;
   height: 100%;
 }
+
+.home {
+  z-index: -1000;
+  height: 100vh;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  //animation-delay: 5s;
+  // animation: animate 16s ease-in-out infinite;
+}
+
+// @keyframes animate{
+//   0% {
+//     background-image: url(background-1.jpg)
+//   }
+//   50% {
+//     background-image: url(backgorund-2.jpg)
+//   }
+//   100% {
+//     background-image: url(background-1.jpg)
+//   }
+// }
+
+// .background {
+//   z-index: -1000;
+//   height: 100vh;
+//   width: 100vw;
+//   -webkit-background-size: cover;
+//   -moz-background-size: cover;
+//   -o-background-size: cover;
+//   background-size: cover;
+//   transition: 0.25s;
+//   transition-timing-function: ease-out;
+//   transform: translateY(0);
+//   opacity: 1;
+//   position: absolute;
+// }
 
 .wrapper {
   border-radius: 20px;
@@ -16,6 +54,8 @@ body {
 }
 
 .header {
+  opacity: 1 !important;
+  padding: 0 2vw 0 2vw;
   display: flex;
   justify-content: space-between;
   margin-bottom: 15%;
@@ -29,13 +69,13 @@ body {
 }
 
 .icon-img {
-  color: $sea-green;
+  color: $white;
   width: 50px;
   height: 50px;
 }
 
 .icon-text {
-  color: $sea-green;
+  color: $white;
 }
 
 .profile {
@@ -44,11 +84,11 @@ body {
 }
 
 .profile-img {
-  color: $sea-green;
+  color: $white;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 5px solid $sea-green;
+  border: 5px solid $white;
   padding: 5px;
 }
 
@@ -59,11 +99,11 @@ body {
   margin: auto;
   width: 50%;
   border-radius: 30px;
-  border: 3px solid $sea-green;
+  border: 3px solid $white;
 }
 
 .search-icon {
-  color: $sea-green;
+  color: $white;
   left: 45px;
   position: relative;
 }
@@ -79,7 +119,7 @@ body {
 }
 
 .search-input::placeholder {
-  color: $sea-green;
+  color: $white;
 }
 
 .footer {
@@ -92,5 +132,5 @@ body {
 
 .footer-text {
   text-align: center;
-  color: $sea-green;
+  color: $white;
 }
