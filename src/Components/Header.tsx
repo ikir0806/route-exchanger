@@ -14,6 +14,14 @@ function Header() {
           <h3 className='white-text'>Язык</h3>
           {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
         </Link>
+        <Link className='header-item' to='/authorization'>
+          {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
+          <h3 className='white-text'>Авторизация</h3>
+        </Link>
+        <Link className='header-item' to='/registration'>
+          {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
+          <h3 className='white-text'>Регистрация</h3>
+        </Link>
         <Link className='header-item' to='/profile'>
           {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
           <h3 className='white-text'>Профиль</h3>
