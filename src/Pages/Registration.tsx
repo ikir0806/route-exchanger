@@ -1,44 +1,49 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { signUp } from '../Services/firebase';
 
 interface Fields {
-  login: string;
+  email: string;
   password: string;
   secondPassword: string;
 }
 
 interface Errors {
-  invalidLogin: boolean | undefined;
+  invalidEmail: boolean | undefined;
   invalidPassword: boolean | undefined;
   notEqualPasswords: boolean | undefined;
 }
 
 function Registration() {
   const [errors, setErrors] = useState<Errors>({
-    invalidLogin: false,
+    invalidEmail: false,
     invalidPassword: false,
     notEqualPasswords: false,
   });
 
+  const navigate = useNavigate();
+
   const handleValidation = (fields: Fields) => {
     const tempErrors: Errors = {
-      invalidLogin: fields.login.length <= 6 ? true : false,
-      invalidPassword: fields.password.length <= 6 ? true : false,
+      invalidEmail: fields.email.length < 6 ? true : false,
+      invalidPassword: fields.password.length < 6 ? true : false,
       notEqualPasswords: fields.password !== fields.secondPassword ? true : false,
     };
-    Object.values(tempErrors).some((error) => error) ? console.log('not ok') : console.log('ok');
+    !Object.values(tempErrors).some((error) => error) &&
+      signUp(fields.email, fields.password).then(() => navigate('/authorization'));
     setErrors(tempErrors);
   };
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e?.preventDefault();
     const targetFields = e.target as typeof e.target & {
-      login: { value: string };
+      email: { value: string };
       password: { value: string };
       secondPassword: { value: string };
     };
 
     const fields = {
-      login: targetFields.login.value,
+      email: targetFields.email.value,
       password: targetFields.password.value,
       secondPassword: targetFields.secondPassword.value,
     };
@@ -50,9 +55,9 @@ function Registration() {
     <div className='form-wrapper'>
       <h1 className='form-title'>Регистрация</h1>
       <form className='form' onSubmit={handleSubmit}>
-        <h3>Введите логин</h3>
-        <input className='form-input' type='text' name='login' />
-        {errors.invalidLogin && <span>Ошибка</span>}
+        <h3>Введите почту</h3>
+        <input className='form-input' type='text' name='email' />
+        {errors.invalidEmail && <span>Ошибка</span>}
         <h3>Введите пароль</h3>
         <input className='form-input' type='password' name='password' />
         {errors.invalidPassword && <span>Ошибка</span>}

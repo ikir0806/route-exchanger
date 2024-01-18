@@ -1,7 +1,25 @@
+import { useNavigate } from 'react-router-dom';
+import { logIn } from '../Services/firebase';
+
 function Authorization() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | undefined) => {
-    console.log(e);
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: React.SyntheticEvent) => {
     e?.preventDefault();
+    const targetFields = e.target as typeof e.target & {
+      email: { value: string };
+      password: { value: string };
+    };
+
+    const fields = {
+      email: targetFields.email.value,
+      password: targetFields.password.value,
+    };
+
+    logIn(fields.email, fields.password).then((res) => {
+      localStorage.setItem('user', JSON.stringify({ uid: res.user.uid, email: fields.email }));
+      navigate('/');
+    });
   };
 
   return (
@@ -9,9 +27,9 @@ function Authorization() {
       <h1 className='form-title'>Авторизация</h1>
       <form className='form' onSubmit={handleSubmit}>
         <h3>Введите логин</h3>
-        <input className='form-input' type='text' />
+        <input className='form-input' type='text' name='email' />
         <h3>Введите пароль</h3>
-        <input className='form-input' type='password' />
+        <input className='form-input' type='password' name='password' />
         <button className='form-button' type='submit'>
           Войти
         </button>
