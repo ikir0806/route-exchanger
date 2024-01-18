@@ -6,10 +6,12 @@ interface Fields {
   email: string;
   password: string;
   secondPassword: string;
+  login: string;
 }
 
 interface Errors {
   invalidEmail: boolean | undefined;
+  invalidLogin: boolean | undefined;
   invalidPassword: boolean | undefined;
   notEqualPasswords: boolean | undefined;
 }
@@ -17,6 +19,7 @@ interface Errors {
 function Registration() {
   const [errors, setErrors] = useState<Errors>({
     invalidEmail: false,
+    invalidLogin: false,
     invalidPassword: false,
     notEqualPasswords: false,
   });
@@ -26,6 +29,7 @@ function Registration() {
   const handleValidation = (fields: Fields) => {
     const tempErrors: Errors = {
       invalidEmail: fields.email.length < 6 ? true : false,
+      invalidLogin: fields.email.length < 6 ? true : false,
       invalidPassword: fields.password.length < 6 ? true : false,
       notEqualPasswords: fields.password !== fields.secondPassword ? true : false,
     };
@@ -38,12 +42,14 @@ function Registration() {
     e?.preventDefault();
     const targetFields = e.target as typeof e.target & {
       email: { value: string };
+      login: { value: string };
       password: { value: string };
       secondPassword: { value: string };
     };
 
     const fields = {
       email: targetFields.email.value,
+      login: targetFields.login.value,
       password: targetFields.password.value,
       secondPassword: targetFields.secondPassword.value,
     };
@@ -58,6 +64,9 @@ function Registration() {
         <h3>Введите почту</h3>
         <input className='form-input' type='text' name='email' />
         {errors.invalidEmail && <span>Ошибка</span>}
+        <h3>Введите логин</h3>
+        <input className='form-input' type='text' name='login' />
+        {errors.invalidLogin && <span>Ошибка</span>}
         <h3>Введите пароль</h3>
         <input className='form-input' type='password' name='password' />
         {errors.invalidPassword && <span>Ошибка</span>}

@@ -39,7 +39,13 @@ function Header() {
                 {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
                 <h3 /* className='green-text' */>Профиль</h3>
               </Link>
-              <button>Выйти</button>
+              <button
+                onClick={() => {
+                  localStorage.removeItem('user');
+                  console.log(localStorage.getItem('user'));
+                }}>
+                Выйти
+              </button>
             </dialog>
           </div>
         )}
