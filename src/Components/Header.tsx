@@ -1,10 +1,13 @@
 import { faMap } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../utils/AuthContext';
 
 function Header() {
+  const { user, setUser } = useContext(AuthContext);
   const [open, setOpen] = useState<boolean>(false);
+
   return (
     <div className='header'>
       <Link className='icon' to='/'>
@@ -16,7 +19,7 @@ function Header() {
           <h3 className='white-text'>Язык</h3>
           {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
         </Link>
-        {!localStorage.getItem('user') && (
+        {!user && (
           <>
             <Link className='header-item' to='/authorization'>
               {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
@@ -28,11 +31,9 @@ function Header() {
             </Link>
           </>
         )}
-        {localStorage.getItem('user') && (
+        {user && (
           <div style={{ position: 'relative' }}>
-            <button onClick={() => setOpen(true)}>
-              {JSON.parse(localStorage.getItem('user') || '')?.email}
-            </button>
+            <button onClick={() => setOpen(true)}>{user?.login}</button>
             <dialog open={open} className='modal-profile'>
               <button onClick={() => setOpen(false)}>X</button>
               <Link className='header-item-profile' to='/profile'>
@@ -41,8 +42,8 @@ function Header() {
               </Link>
               <button
                 onClick={() => {
+                  setUser(null);
                   localStorage.removeItem('user');
-                  console.log(localStorage.getItem('user'));
                 }}>
                 Выйти
               </button>

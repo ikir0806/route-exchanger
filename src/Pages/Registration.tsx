@@ -34,7 +34,7 @@ function Registration() {
       notEqualPasswords: fields.password !== fields.secondPassword ? true : false,
     };
     !Object.values(tempErrors).some((error) => error) &&
-      signUp(fields.email, fields.password).then(() => navigate('/authorization'));
+      signUp(fields.email, fields.password, fields.login).then(() => navigate('/authorization'));
     setErrors(tempErrors);
   };
 
