@@ -1,12 +1,13 @@
 import { faMap } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../utils/AuthContext';
 
 function Header() {
   const { user, setUser } = useContext(AuthContext);
   const [open, setOpen] = useState<boolean>(false);
+  const dialogRef = React.createRef<HTMLDialogElement>();
 
   return (
     <div className='header'>
@@ -33,21 +34,32 @@ function Header() {
         )}
         {user && (
           <div style={{ position: 'relative' }}>
-            <button onClick={() => setOpen(true)}>{user?.login}</button>
-            <dialog open={open} className='modal-profile'>
-              <button onClick={() => setOpen(false)}>X</button>
-              <Link className='header-item-profile' to='/profile'>
-                {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
-                <h3 /* className='green-text' */>Профиль</h3>
-              </Link>
-              <button
-                onClick={() => {
-                  setUser(null);
-                  localStorage.removeItem('user');
-                }}>
-                Выйти
-              </button>
-            </dialog>
+            <button className='header-user' onClick={() => setOpen(true)}>
+              {user?.login}
+            </button>
+            <div
+              onClick={(e) =>
+                !dialogRef.current?.contains(e.target as HTMLElement) && setOpen(false)
+              }
+              className={`modal-backdrop ${open ? '' : 'hidden'}`}>
+              <dialog ref={dialogRef} open={open} className='modal-profile'>
+                <button className='modal-profile-close' onClick={() => setOpen(false)}>
+                  X
+                </button>
+                <Link className='modal-profile-link' to='/profile'>
+                  {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
+                  <h3 className='modal-profile-link-text'>Профиль</h3>
+                </Link>
+                <button
+                  className='modal-profile-logout'
+                  onClick={() => {
+                    setUser(null);
+                    localStorage.removeItem('user');
+                  }}>
+                  Выйти
+                </button>
+              </dialog>
+            </div>
           </div>
         )}
       </div>
