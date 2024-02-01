@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PuffLoader } from 'react-spinners';
 import { signUp } from '../Services/firebase';
 
 interface Fields {
@@ -23,22 +24,40 @@ function Registration() {
     invalidPassword: false,
     notEqualPasswords: false,
   });
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
   const handleValidation = (fields: Fields) => {
     const tempErrors: Errors = {
       invalidEmail: fields.email.length < 6 ? true : false,
-      invalidLogin: fields.email.length < 6 ? true : false,
+      invalidLogin: fields.login.length < 6 ? true : false,
       invalidPassword: fields.password.length < 6 ? true : false,
       notEqualPasswords: fields.password !== fields.secondPassword ? true : false,
     };
-    !Object.values(tempErrors).some((error) => error) &&
-      signUp(fields.email, fields.password, fields.login).then(() => navigate('/authorization'));
-    setErrors(tempErrors);
+    if (!Object.values(tempErrors).some((error) => error)) {
+      signUp(fields.email, fields.password, fields.login)
+        .then(() => navigate('/authorization'))
+        .catch((error) => {
+          switch (error.code) {
+            case 'auth/email-already-in-use':
+              return setError('Пользователь с такой почтой уже зарегестрирован');
+            case 'auth/network-request-failed':
+              return setError('Ошибка сети. Проверьте подключение к интернету');
+            default:
+              return setError('Ошибка регистрации');
+          }
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setErrors(tempErrors);
+      setLoading(false);
+    }
   };
 
   const handleSubmit = (e: React.SyntheticEvent) => {
+    setLoading(true);
     e?.preventDefault();
     const targetFields = e.target as typeof e.target & {
       email: { value: string };
@@ -57,25 +76,63 @@ function Registration() {
     handleValidation(fields);
   };
 
+  const clearError = (errorField: keyof Errors) =>
+    errors[errorField] &&
+    setErrors({
+      ...errors,
+      [errorField]: false,
+    });
+
   return (
     <div className='form-wrapper'>
       <h1 className='form-title'>Регистрация</h1>
       <form className='form' onSubmit={handleSubmit}>
         <h3>Введите почту</h3>
-        <input className='form-input' type='text' name='email' />
-        {errors.invalidEmail && <span>Ошибка</span>}
+        <input
+          onChange={() => clearError('invalidEmail')}
+          className='form-input'
+          type='text'
+          name='email'
+        />
+        {errors.invalidEmail && <span className='error-text'>Некорректный email</span>}
         <h3>Введите логин</h3>
-        <input className='form-input' type='text' name='login' />
-        {errors.invalidLogin && <span>Ошибка</span>}
+        <input
+          onChange={() => clearError('invalidLogin')}
+          className='form-input'
+          type='text'
+          name='login'
+        />
+        {errors.invalidLogin && (
+          <span className='error-text'>Логин должен быть не менее 7 символов в длину</span>
+        )}
         <h3>Введите пароль</h3>
-        <input className='form-input' type='password' name='password' />
-        {errors.invalidPassword && <span>Ошибка</span>}
+        <input
+          onChange={() => clearError('invalidPassword')}
+          className='form-input'
+          type='password'
+          name='password'
+        />
+        {errors.invalidPassword && (
+          <span className='error-text'>Пароль должен быть не менее 7 символов в длину</span>
+        )}
         <h3>Повторите пароль</h3>
-        <input className='form-input' type='password' name='secondPassword' />
-        {errors.notEqualPasswords && <span>Ошибка</span>}
-        <button className='form-button' type='submit'>
-          Зарегистрироваться
-        </button>
+        <input
+          onChange={() => clearError('notEqualPasswords')}
+          className='form-input'
+          type='password'
+          name='secondPassword'
+        />
+        {errors.notEqualPasswords && <span className='error-text'>Пароли не совпадают</span>}
+        {loading ? (
+          <div className='spinner'>
+            <PuffLoader color='#006d4e' />
+          </div>
+        ) : (
+          <button className='form-button' type='submit'>
+            Зарегистрироваться
+          </button>
+        )}
+        {error && <span className='error-text'>{error}</span>}
       </form>
     </div>
   );

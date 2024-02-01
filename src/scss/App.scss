@@ -245,7 +245,7 @@ body::after {
 }
 
 .spinner {
-  margin-top: 10vh;
+  margin-top: 20px;
   display: flex;
   justify-content: center;
 }
@@ -282,4 +282,8 @@ body::after {
   text-align: center;
   color: $white;
   margin: auto;
+}
+
+.error-text {
+  color: $error-red;
 }

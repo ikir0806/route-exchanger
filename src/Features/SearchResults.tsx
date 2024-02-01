@@ -11,7 +11,7 @@ const SearchResults: FC<SearchResultsProps> = ({ loading }) => {
   return loading === null ? (
     <></>
   ) : loading ? (
-    <div className='spinner'>
+    <div style={{ marginTop: '10vh' }} className='spinner'>
       <PuffLoader color='#006d4e' />
     </div>
   ) : (
