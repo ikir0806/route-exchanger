@@ -46,9 +46,16 @@ function Header() {
                 <button className='modal-profile-close' onClick={() => setOpen(false)}>
                   X
                 </button>
-                <Link className='modal-profile-link' to='/profile'>
+                <Link onClick={() => setOpen(false)} className='modal-profile-link' to='/profile'>
                   {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
                   <h3 className='modal-profile-link-text'>Профиль</h3>
+                </Link>
+                <Link
+                  onClick={() => setOpen(false)}
+                  className='modal-profile-link'
+                  to='/constructor'>
+                  {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
+                  <h3 className='modal-profile-link-text'>Конструктор маршрутов</h3>
                 </Link>
                 <button
                   className='modal-profile-logout'

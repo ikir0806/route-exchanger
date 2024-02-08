@@ -3,6 +3,7 @@ import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Footer from './Components/Footer';
 import Header from './Components/Header';
 import Authorization from './Pages/Authorization';
+import { Constructor } from './Pages/Constructor';
 import Main from './Pages/Main';
 import { Profile } from './Pages/Profile';
 import Registration from './Pages/Registration';
@@ -25,6 +26,7 @@ function App() {
         <Route path='/' element={<Main />} />
         <Route element={<PrivateRoutes />}>
           <Route path='profile' element={<Profile />} />
+          <Route path='constructor' element={<Constructor />} />
         </Route>
         <Route path='authorization' element={<Authorization />} />
         <Route path='registration' element={<Registration />} />
