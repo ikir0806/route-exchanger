@@ -288,3 +288,8 @@ body::after {
 .error-text {
   color: $error-red;
 }
+
+.map-container {
+  display: flex;
+  justify-content: center;
+}

@@ -3,7 +3,7 @@ import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Footer from './Components/Footer';
 import Header from './Components/Header';
 import Authorization from './Pages/Authorization';
-import { Constructor } from './Pages/Constructor';
+import Constructor from './Pages/Constructor';
 import Main from './Pages/Main';
 import { Profile } from './Pages/Profile';
 import Registration from './Pages/Registration';
