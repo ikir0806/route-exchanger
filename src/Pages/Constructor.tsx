@@ -16,6 +16,14 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
         layers: [new TileLayer({ source: new OSM() })],
         view: new View({ center: [0, 0], zoom: 1 }),
         target: ref.current,
+        overlays: [
+          // {
+          //   position: fromLonLat([16.3725, 48.208889]),
+          //   positioning: 'bottom-right',
+          //   element: document.getElementById('marker'),
+          //   stopEvent: false,
+          // },
+        ],
       });
       apply(mapRef.current, `${mapStyle}?apiKey=${myAPIKey}`);
     }
