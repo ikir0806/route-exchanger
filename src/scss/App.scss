@@ -13,6 +13,7 @@ h4,
 h5 {
   font-family: 'Raleway', sans-serif;
   color: $dark-grey;
+  margin: 0;
 }
 
 a {
@@ -331,4 +332,15 @@ body::after {
   justify-content: space-between;
   padding: 0;
   width: 99%;
+}
+
+.ol-popup {
+  background-color: $white;
+  border-radius: 20px;
+  padding: 5px;
+  gap: 10px;
+}
+
+.ol-popup-closer {
+  float: right;
 }
