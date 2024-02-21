@@ -1,15 +1,19 @@
-import { Map, Overlay, View } from 'ol';
+import { Feature, Map, Overlay, View } from 'ol';
 import apply from 'ol-mapbox-style';
-import Draw from 'ol/interaction/Draw.js';
-import Interaction from 'ol/interaction/Interaction';
+import { Coordinate, toStringHDMS } from 'ol/coordinate';
+import { Point } from 'ol/geom';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
+import { toLonLat } from 'ol/proj';
 import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
+import { Fill, Icon, Stroke, Style, Text } from 'ol/style';
 import { useEffect, useRef } from 'react';
+import icon from '../assets/images/marker.svg';
 // import './styles.css';
 
 function MapView({ zoom = 1 }: { zoom?: number }) {
+  // const [coordinate, setCoordinate] = useState<Coordinate | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const myAPIKey = 'd7aaaf2a98e54f60bf270cf3b1836e4c';
@@ -19,21 +23,29 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
       const container = document.getElementById('popup') || undefined;
       const content = document.getElementById('popup-content');
       const closer = document.getElementById('popup-closer');
+      const confirm = document.getElementById('popup-confirm');
+      const cancel = document.getElementById('popup-cancel');
 
       const raster = new TileLayer({
         source: new OSM(),
       });
 
-      const source = new VectorSource({ wrapX: false });
-      const vector = new VectorLayer({
-        source: source,
-        style: {
-          'fill-color': 'rgba(255, 255, 255, 0.2)',
-          'stroke-color': '#ffcc33',
-          'stroke-width': 2,
-          'circle-radius': 7,
-          'circle-fill-color': '#ffcc33',
-        },
+      const iconStyle = new Style({
+        image: new Icon({
+          anchor: [16, 38],
+          anchorXUnits: 'pixels',
+          anchorYUnits: 'pixels',
+
+          src: icon,
+        }),
+        text: new Text({
+          text: '1',
+          font: 'Normal 15px Raleway',
+          fill: new Fill({ color: 'black' }),
+          stroke: new Stroke({ color: 'black', width: 2 }),
+          offsetY: -18,
+          offsetX: 0.5,
+        }),
       });
 
       const overlay = new Overlay({
@@ -45,42 +57,59 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
         },
       });
 
-      if (closer) {
-        closer.onclick = function () {
-          overlay.setPosition(undefined);
-          closer.blur();
-          return false;
-        };
-      }
-
       mapRef.current = new Map({
-        layers: [raster, vector],
+        layers: [raster],
         view: new View({ center: [0, 0], zoom: 1 }),
         target: ref.current,
         overlays: [overlay],
       });
 
-      mapRef.current.on('singleclick', (e) => {
-        console.log(e);
-        const coordinate = e.coordinate;
+      let coordinate: Coordinate | null = null;
+
+      mapRef.current?.on('singleclick', (e) => {
+        coordinate = e.coordinate;
         const hdms = toStringHDMS(toLonLat(coordinate));
         if (content) content.innerHTML = '<p>You clicked here:</p><code>' + hdms + '</code>';
         overlay.setPosition(coordinate);
       });
 
-      const typeSelect = 'Point';
-
-      let draw: null | Draw | Interaction = null; // global so we can remove it later
-
       const addInteraction = () => {
-        draw = new Draw({
-          source: source,
-          type: typeSelect,
-        });
-        mapRef.current?.addInteraction(draw);
+        if (coordinate) {
+          const iconFeature = new Feature({
+            geometry: new Point(coordinate),
+          });
+          iconFeature.setStyle(iconStyle);
+          const vectorSource = new VectorSource({
+            features: [iconFeature],
+          });
+          const vectorLayer = new VectorLayer({
+            source: vectorSource,
+          });
+          mapRef.current?.addLayer(vectorLayer);
+        }
       };
 
-      addInteraction();
+      if (confirm)
+        confirm.onclick = () => {
+          addInteraction();
+          overlay.setPosition(undefined);
+          closer?.blur();
+          return false;
+        };
+
+      if (cancel)
+        cancel.onclick = () => {
+          overlay.setPosition(undefined);
+          closer?.blur();
+          return false;
+        };
+
+      if (closer)
+        closer.onclick = () => {
+          overlay.setPosition(undefined);
+          closer.blur();
+          return false;
+        };
 
       apply(mapRef.current, `${mapStyle}?apiKey=${myAPIKey}`);
     }
@@ -89,7 +118,6 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
   useEffect(() => {
     mapRef.current?.getView().setZoom(zoom);
   }, [mapRef, zoom]);
-
   return <div ref={ref} style={{ width: '90vw', height: '80vh' }} />;
 }
 
@@ -102,6 +130,12 @@ export default function Constructor() {
           X
         </a>
         <div id='popup-content'></div>
+        <button id='popup-confirm' className='ol-popup-confirm'>
+          Добавить
+        </button>
+        <button id='popup-cancel' className='ol-popup-cancel'>
+          Отмена
+        </button>
       </div>
     </div>
   );
