@@ -7,49 +7,71 @@ import VectorLayer from 'ol/layer/Vector';
 import { toLonLat } from 'ol/proj';
 import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
-import { Fill, Icon, Stroke, Style, Text } from 'ol/style';
+import { Fill, Stroke, Style, Text } from 'ol/style';
+import CircleStyle from 'ol/style/Circle';
 import { useEffect, useRef } from 'react';
-import icon from '../assets/images/marker.svg';
-// import './styles.css';
 
 function MapView({ zoom = 1 }: { zoom?: number }) {
-  // const [coordinate, setCoordinate] = useState<Coordinate | null>(null);
+  // const [markerNumber, setMarkerNumber] = useState<number>(1);
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const myAPIKey = 'd7aaaf2a98e54f60bf270cf3b1836e4c';
   const mapStyle = 'https://maps.geoapify.com/v1/styles/positron/style.json';
   useEffect(() => {
     if (ref.current && !mapRef.current) {
-      const container = document.getElementById('popup') || undefined;
+      const setMarkerContainer = document.getElementById('popup') || undefined;
+      const getMarkerContainer = document.getElementById('marker-popup') || undefined;
       const content = document.getElementById('popup-content');
+      const markerContent = document.getElementById('marker-popup-content');
       const closer = document.getElementById('popup-closer');
+      const markerCloser = document.getElementById('marker-popup-closer');
       const confirm = document.getElementById('popup-confirm');
       const cancel = document.getElementById('popup-cancel');
+
+      let markerNumber = 0;
 
       const raster = new TileLayer({
         source: new OSM(),
       });
 
-      const iconStyle = new Style({
-        image: new Icon({
-          anchor: [16, 38],
-          anchorXUnits: 'pixels',
-          anchorYUnits: 'pixels',
+      const getIconStyle = () => {
+        return new Style({
+          image: new CircleStyle({
+            radius: 10,
+            stroke: new Stroke({ color: 'black', width: 2 }),
+            fill: new Fill({ color: 'transparent' }),
+          }),
+          // image: new Icon({
+          //   anchor: [16, 38],
+          //   anchorXUnits: 'pixels',
+          //   anchorYUnits: 'pixels',
 
-          src: icon,
-        }),
-        text: new Text({
-          text: '1',
-          font: 'Normal 15px Raleway',
-          fill: new Fill({ color: 'black' }),
-          stroke: new Stroke({ color: 'black', width: 2 }),
-          offsetY: -18,
-          offsetX: 0.5,
-        }),
-      });
+          //   src: icon,
+          // }),
+          zIndex: 1000,
+          fill: new Fill({ color: 'transparent' }),
+          text: new Text({
+            text: `${markerNumber}`,
+            font: 'Normal 15px Raleway',
+            fill: new Fill({ color: 'black' }),
+            stroke: new Stroke({ color: 'black', width: 2 }),
+            offsetY: -1,
+            offsetX: 0.3,
+          }),
+        });
+      };
 
       const overlay = new Overlay({
-        element: container,
+        element: setMarkerContainer,
+        autoPan: {
+          animation: {
+            duration: 250,
+          },
+        },
+      });
+
+      const markerOverlay = new Overlay({
+        element: getMarkerContainer,
         autoPan: {
           animation: {
             duration: 250,
@@ -61,24 +83,37 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
         layers: [raster],
         view: new View({ center: [0, 0], zoom: 1 }),
         target: ref.current,
-        overlays: [overlay],
+        overlays: [overlay, markerOverlay],
       });
 
       let coordinate: Coordinate | null = null;
 
       mapRef.current?.on('singleclick', (e) => {
+        console.log(markerNumber);
+        const features = mapRef.current?.getFeaturesAtPixel(e.pixel);
+        const feature = features?.find((feature) => feature.getProperties().name);
         coordinate = e.coordinate;
-        const hdms = toStringHDMS(toLonLat(coordinate));
-        if (content) content.innerHTML = '<p>You clicked here:</p><code>' + hdms + '</code>';
-        overlay.setPosition(coordinate);
+        if (feature && markerContent) {
+          markerContent.innerHTML = `<p>${feature.getProperties().name}</p>`;
+          markerOverlay.setPosition(coordinate);
+        } else {
+          const hdms = toStringHDMS(toLonLat(coordinate));
+          if (content) content.innerHTML = '<p>You clicked here:</p><code>' + hdms + '</code>';
+          overlay.setPosition(coordinate);
+          markerNumber++;
+          console.log(markerNumber);
+        }
       });
 
-      const addInteraction = () => {
+      const addInteraction = (name: string) => {
         if (coordinate) {
           const iconFeature = new Feature({
             geometry: new Point(coordinate),
+            name: name,
+            population: 4000,
+            rainfall: 500,
           });
-          iconFeature.setStyle(iconStyle);
+          iconFeature.setStyle(getIconStyle());
           const vectorSource = new VectorSource({
             features: [iconFeature],
           });
@@ -89,9 +124,27 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
         }
       };
 
+      const htmlEl = mapRef.current!.getTarget() as HTMLElement;
+
+      mapRef.current?.on('pointermove', function (e) {
+        if (e.dragging) return;
+        const features = mapRef.current?.getFeaturesAtPixel(e.pixel);
+        if (features?.some((feature) => feature.getProperties().name))
+          htmlEl.style.cursor = 'pointer';
+        else {
+          if (htmlEl.style.cursor === 'pointer') {
+            htmlEl.style.cursor = '';
+            return;
+          }
+          return;
+        }
+      });
+
       if (confirm)
         confirm.onclick = () => {
-          addInteraction();
+          const input = document.getElementById('popup-input') as HTMLInputElement;
+          addInteraction(input.value);
+          input.value = '';
           overlay.setPosition(undefined);
           closer?.blur();
           return false;
@@ -111,6 +164,12 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
           return false;
         };
 
+      if (markerCloser)
+        markerCloser.onclick = () => {
+          markerOverlay.setPosition(undefined);
+          markerCloser.blur();
+          return false;
+        };
       apply(mapRef.current, `${mapStyle}?apiKey=${myAPIKey}`);
     }
   }, [ref, mapRef]);
@@ -125,17 +184,26 @@ export default function Constructor() {
   return (
     <div className='map-container'>
       <MapView zoom={2} />
+
       <div id='popup' className='ol-popup'>
         <a href='#' id='popup-closer' className='ol-popup-closer'>
           X
         </a>
         <div id='popup-content'></div>
+        <input className='popup-input' id='popup-input' />
         <button id='popup-confirm' className='ol-popup-confirm'>
           Добавить
         </button>
+
         <button id='popup-cancel' className='ol-popup-cancel'>
           Отмена
         </button>
+      </div>
+      <div id='marker-popup' className='ol-popup'>
+        <a href='#' id='marker-popup-closer' className='ol-popup-closer'>
+          X
+        </a>
+        <p id='marker-popup-content'></p>
       </div>
     </div>
   );
