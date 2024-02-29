@@ -1,10 +1,9 @@
 import { Feature, Map, Overlay, View } from 'ol';
 import apply from 'ol-mapbox-style';
-import { Coordinate, toStringHDMS } from 'ol/coordinate';
+import { Coordinate } from 'ol/coordinate';
 import { Point } from 'ol/geom';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
-import { toLonLat } from 'ol/proj';
 import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import { Fill, Stroke, Style, Text } from 'ol/style';
@@ -89,7 +88,6 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
       let coordinate: Coordinate | null = null;
 
       mapRef.current?.on('singleclick', (e) => {
-        console.log(markerNumber);
         const features = mapRef.current?.getFeaturesAtPixel(e.pixel);
         const feature = features?.find((feature) => feature.getProperties().name);
         coordinate = e.coordinate;
@@ -97,11 +95,9 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
           markerContent.innerHTML = `<p>${feature.getProperties().name}</p>`;
           markerOverlay.setPosition(coordinate);
         } else {
-          const hdms = toStringHDMS(toLonLat(coordinate));
-          if (content) content.innerHTML = '<p>You clicked here:</p><code>' + hdms + '</code>';
+          if (content) content.innerHTML = '<p>Введите название точки маршрута</p>';
           overlay.setPosition(coordinate);
           markerNumber++;
-          console.log(markerNumber);
         }
       });
 
