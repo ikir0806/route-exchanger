@@ -313,6 +313,15 @@ body::after {
   width: 35px;
   height: 35px;
   font-size: x-large;
+  border-radius: 20px;
+  border: 3px solid $main-color;
+  color: $main-color;
+  background: $white;
+  font-weight: bold;
+}
+
+.ol-zoom > button:hover {
+  cursor: pointer;
 }
 
 .ol-rotate {
@@ -337,10 +346,44 @@ body::after {
 .ol-popup {
   background-color: $white;
   border-radius: 20px;
-  padding: 5px;
+  padding: 10px;
   gap: 10px;
+  min-width: 200px;
+}
+
+.ol-popup > p {
+  text-align: center;
+}
+
+.ol-popup-input {
+  width: 97%;
+  margin-top: 10px;
+  border-radius: 20px;
+  border: 1px solid $main-color;
+  height: 25px;
+}
+
+.ol-popup-wrp {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 
 .ol-popup-closer {
   float: right;
+}
+
+.ol-popup-text {
+  text-align: center;
+}
+
+.ol-popup-content > p {
+  text-align: center;
+}
+
+.ol-popup-button {
+  border-radius: 20px;
+  border: 1px solid $main-color;
+  background: transparent;
+  width: 45%;
 }
