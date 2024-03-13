@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@egjs/flicking-plugins": "^4.7.1",
+    "@egjs/react-flicking": "^4.11.2",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-brands-svg-icons": "^6.4.2",
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
