@@ -11,7 +11,6 @@ import CircleStyle from 'ol/style/Circle';
 import { useEffect, useRef } from 'react';
 
 function MapView({ zoom = 1 }: { zoom?: number }) {
-  // const [markerNumber, setMarkerNumber] = useState<number>(1);
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const myAPIKey = 'd7aaaf2a98e54f60bf270cf3b1836e4c';
@@ -89,7 +88,9 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
 
       mapRef.current?.on('singleclick', (e) => {
         const features = mapRef.current?.getFeaturesAtPixel(e.pixel);
-        const feature = features?.find((feature) => feature.getProperties().name);
+        const feature = features?.find(
+          (feature) => Object.getPrototypeOf(feature)?.constructor?.name === '_Feature',
+        );
         coordinate = e.coordinate;
         if (feature && markerContent) {
           markerContent.innerHTML = `<p>${feature.getProperties().name}</p>`;
@@ -97,7 +98,6 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
         } else {
           if (content) content.innerHTML = '<p>Введите название точки маршрута</p>';
           overlay.setPosition(coordinate);
-          markerNumber++;
         }
       });
 
@@ -108,6 +108,7 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
             name: name,
             population: 4000,
             rainfall: 500,
+            id: 'fdgd',
           });
           iconFeature.setStyle(getIconStyle());
           const vectorSource = new VectorSource({
@@ -125,7 +126,11 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
       mapRef.current?.on('pointermove', function (e) {
         if (e.dragging) return;
         const features = mapRef.current?.getFeaturesAtPixel(e.pixel);
-        if (features?.some((feature) => feature.getProperties().name))
+        if (
+          features?.some(
+            (feature) => Object.getPrototypeOf(feature)?.constructor?.name === '_Feature',
+          )
+        )
           htmlEl.style.cursor = 'pointer';
         else {
           if (htmlEl.style.cursor === 'pointer') {
@@ -138,6 +143,7 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
 
       if (confirm)
         confirm.onclick = () => {
+          markerNumber++;
           const input = document.getElementById('popup-input') as HTMLInputElement;
           addInteraction(input.value);
           input.value = '';
@@ -173,7 +179,7 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
   useEffect(() => {
     mapRef.current?.getView().setZoom(zoom);
   }, [mapRef, zoom]);
-  return <div ref={ref} style={{ width: '90vw', height: '80vh' }} />;
+  return <div ref={ref} style={{ width: '100vw', height: '80vh' }} />;
 }
 
 export default MapView;

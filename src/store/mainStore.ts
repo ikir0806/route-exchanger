@@ -1,12 +1,8 @@
+import { UploadFile } from 'antd';
 import { makeAutoObservable } from 'mobx';
 interface Result {
   id: string;
   label: string;
-}
-
-interface Image {
-  id: string;
-  source: string;
 }
 
 class MainStore {
@@ -15,11 +11,9 @@ class MainStore {
     { id: '2', label: 'Чебоксары' },
   ];
 
-  imagesArray: Array<Image> = [
-    { id: '1', source: '/monako1.jpg' },
-    { id: '2', source: '/monako2.jpg' },
-    { id: '3', source: '/monako1.jpg' },
-    { id: '4', source: '/monako2.jpg' },
+  imagesArray: UploadFile[] = [
+    { uid: '1', url: '/monako1.jpg', name: 'monako1' },
+    { uid: '2', url: '/monako2.jpg', name: 'monako2' },
   ];
 
   constructor() {
@@ -30,7 +24,7 @@ class MainStore {
     this.resultsArray = array;
   }
 
-  setImagesArray(array: Array<Image>) {
+  setImagesArray(array: UploadFile[]) {
     this.imagesArray = array;
   }
 }
