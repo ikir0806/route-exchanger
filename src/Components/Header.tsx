@@ -35,7 +35,7 @@ function Header() {
         {user && (
           <div style={{ position: 'relative' }}>
             <button className='header-user' onClick={() => setOpen(true)}>
-              {user?.login}
+              <h3>{user?.login}</h3>
             </button>
             <div
               onClick={(e) =>

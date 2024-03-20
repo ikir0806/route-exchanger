@@ -1,5 +1,5 @@
 import type { GetProp, UploadProps } from 'antd';
-import { ConfigProvider, Upload } from 'antd';
+import { ConfigProvider, Upload, message } from 'antd';
 import { Observer } from 'mobx-react';
 import React from 'react';
 import mainStore from '../store/mainStore';
@@ -14,6 +14,7 @@ const PointImages: React.FC = () => {
   const beforeUpload = (file: FileType) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
+      message.warning('Недопустимый формат файла');
       return Upload.LIST_IGNORE;
     }
     return false;

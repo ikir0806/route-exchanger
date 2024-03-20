@@ -16,8 +16,18 @@ h5 {
   margin: 0;
 }
 
+h3 {
+  font-weight: 400;
+}
+
 a {
   text-decoration: none;
+  font-weight: 400;
+}
+
+button:hover,
+a:hover {
+  cursor: pointer;
 }
 
 body {
@@ -82,6 +92,10 @@ body::after {
 .header-user:hover {
   cursor: pointer;
   opacity: 0.7;
+}
+
+.header-user > h3 {
+  color: $white;
 }
 
 .header-item {
@@ -284,6 +298,7 @@ body::after {
   text-align: center;
   color: $white;
   margin: auto;
+  font-weight: 400;
 }
 
 .error-text {
