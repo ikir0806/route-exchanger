@@ -1,7 +1,9 @@
 import { Feature, Map, Overlay, View } from 'ol';
 import apply from 'ol-mapbox-style';
 import { Coordinate } from 'ol/coordinate';
+import { GeoJSON } from 'ol/format.js';
 import { Point } from 'ol/geom';
+import DragAndDrop from 'ol/interaction/DragAndDrop.js';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import OSM from 'ol/source/OSM';
@@ -10,12 +12,72 @@ import { Fill, Stroke, Style, Text } from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 import { useEffect, useRef } from 'react';
 
-function MapView({ zoom = 1 }: { zoom?: number }) {
+interface ILinkProps extends React.HTMLProps<HTMLElement> {
+  href?: string;
+  downlaoad?: string;
+  click: () => void;
+}
+
+function MapView({
+  zoom = 1,
+  isDownload,
+  setIsDownload,
+}: {
+  zoom?: number;
+  isDownload: boolean;
+  setIsDownload: (boolean: boolean) => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const myAPIKey = 'd7aaaf2a98e54f60bf270cf3b1836e4c';
   const mapStyle = 'https://maps.geoapify.com/v1/styles/positron/style.json';
   useEffect(() => {
+    if (isDownload) {
+      const link = document.getElementById('download') as ILinkProps | null;
+
+      const download = (fullpath: string, filename: string) => {
+        fetch(fullpath)
+          .then(function (response) {
+            return response.blob();
+          })
+          .then(function (blob) {
+            if (link) {
+              link.href = URL.createObjectURL(blob);
+              link.download = filename;
+              link.click();
+            }
+          });
+      };
+
+      let dragAndDropInteraction: null | DragAndDrop = null;
+      const setInteraction = () => {
+        if (dragAndDropInteraction) {
+          mapRef.current?.removeInteraction(dragAndDropInteraction);
+        }
+        dragAndDropInteraction = new DragAndDrop({
+          formatConstructors: [GeoJSON],
+        });
+        dragAndDropInteraction.on('addfeatures', function (event) {
+          const vectorSource = new VectorSource({
+            features: event.features?.filter((feature) => feature instanceof Feature) as Feature[],
+          });
+          mapRef.current?.addLayer(
+            new VectorLayer({
+              source: vectorSource,
+            }),
+          );
+          mapRef.current?.getView().fit(vectorSource.getExtent());
+        });
+        mapRef.current?.addInteraction(dragAndDropInteraction);
+      };
+
+      console.log('aaa');
+      setInteraction();
+      download('data/geojson/roads-seoul.geojson', 'roads-seoul.geojson');
+      setIsDownload(false);
+      return;
+    }
+
     if (ref.current && !mapRef.current) {
       const setMarkerContainer = document.getElementById('popup') || undefined;
       const getMarkerContainer = document.getElementById('marker-popup') || undefined;
@@ -174,7 +236,7 @@ function MapView({ zoom = 1 }: { zoom?: number }) {
         };
       apply(mapRef.current, `${mapStyle}?apiKey=${myAPIKey}`);
     }
-  }, [ref, mapRef]);
+  }, [ref, mapRef, isDownload]);
 
   useEffect(() => {
     mapRef.current?.getView().setZoom(zoom);

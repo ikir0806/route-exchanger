@@ -15,6 +15,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@pbe/react-yandex-maps": "^1.2.5",
     "antd": "^5.15.2",
     "firebase": "^10.7.1",
     "mobx": "^6.10.2",
@@ -25,7 +26,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0",
-    "react-spinners": "^0.13.8"
+    "react-spinners": "^0.13.8",
+    "ymap3-components": "latest"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
@@ -33,6 +35,7 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
+    "@yandex/ymaps3-types": "^0.0.22",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",

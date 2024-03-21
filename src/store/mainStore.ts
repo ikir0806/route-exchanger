@@ -11,10 +11,7 @@ class MainStore {
     { id: '2', label: 'Чебоксары' },
   ];
 
-  imagesArray: UploadFile[] = [
-    { uid: '1', url: '/monako1.jpg', name: 'monako1' },
-    { uid: '2', url: '/monako2.jpg', name: 'monako2' },
-  ];
+  imagesArray: UploadFile[] = [];
 
   constructor() {
     makeAutoObservable(this);
