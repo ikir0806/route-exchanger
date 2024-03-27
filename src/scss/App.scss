@@ -312,6 +312,13 @@ body::after {
   justify-content: center;
 }
 
+.marker {
+  border-radius: 50%;
+  border: 2px solid $main-color;
+  background: transparent;
+  box-shadow: none;
+}
+
 .ol-overlaycontainer-stopevent {
   float: inline-end;
 }
