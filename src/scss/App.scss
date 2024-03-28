@@ -367,20 +367,21 @@ body::after {
   width: 99%;
 }
 
-.ol-popup {
+.popup {
   background-color: $white;
   border-radius: 20px;
   padding: 10px;
   gap: 10px;
   min-width: 40vw;
   max-width: 50vw;
+  z-index: 1000;
 }
 
-.ol-popup > p {
+.popup > p {
   text-align: center;
 }
 
-.ol-popup-input {
+.popup-input {
   width: 97%;
   margin-top: 10px;
   border-radius: 20px;
@@ -388,42 +389,61 @@ body::after {
   height: 25px;
 }
 
-.ol-popup-wrp {
+.popup-wrp {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
 }
 
-.ol-popup-closer {
+.popup-closer {
+  padding-top: 3px;
   float: right;
-}
-
-.ol-popup-text {
+  width: 23px;
+  height: 20px;
   text-align: center;
 }
 
-.ol-popup-content > p {
+.popup-closer:hover {
+  color: $white;
+  background: $main-color;
+  border-radius: 50%;
+}
+
+.popup-text {
   text-align: center;
 }
 
-.ol-popup-button {
+.popup-content > p {
+  text-align: center;
+}
+
+.popup-button {
   border-radius: 20px;
-  border: 1px solid $main-color;
-  background: transparent;
   width: 45%;
 }
 
-.ol-popup-list {
+.primary-button {
+  border: 1px solid $main-color;
+  background: $main-color;
+  color: $white;
+}
+
+.default-button {
+  border: 1px solid $main-color;
+  background: transparent;
+}
+
+.popup-list {
   margin-top: 10px;
   // width: 100%;
 }
 
-.ol-popup-img {
+.popup-img {
   // width: 50%;
   width: 100%;
   height: 100%;
 }
 
-.ol-popup-images {
+.popup-images {
   margin-top: 10px;
 }

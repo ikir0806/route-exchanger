@@ -2012,7 +2012,7 @@ export const customization = [
     elements: 'label.icon',
     stylers: [
       {
-        color: '#808080',
+        color: '#cccccc',
       },
       {
         'secondary-color': '#ffffff',
@@ -2048,7 +2048,7 @@ export const customization = [
     elements: 'label.icon',
     stylers: [
       {
-        color: '#808080',
+        color: '#cccccc',
       },
       {
         'secondary-color': '#ffffff',
@@ -2084,7 +2084,7 @@ export const customization = [
     elements: 'label.icon',
     stylers: [
       {
-        color: '#808080',
+        color: '#cccccc',
       },
       {
         'secondary-color': '#ffffff',
@@ -2120,7 +2120,7 @@ export const customization = [
     elements: 'label.icon',
     stylers: [
       {
-        color: '#808080',
+        color: '#cccccc',
       },
       {
         'secondary-color': '#ffffff',
@@ -2156,7 +2156,7 @@ export const customization = [
     elements: 'label.icon',
     stylers: [
       {
-        color: '#808080',
+        color: '#cccccc',
       },
       {
         'secondary-color': '#ffffff',
@@ -2192,7 +2192,7 @@ export const customization = [
     elements: 'label.icon',
     stylers: [
       {
-        color: '#808080',
+        color: '#cccccc',
       },
       {
         'secondary-color': '#ffffff',
@@ -2228,7 +2228,7 @@ export const customization = [
     elements: 'label.icon',
     stylers: [
       {
-        color: '#808080',
+        color: '#cccccc',
       },
       {
         'secondary-color': '#ffffff',
@@ -2264,7 +2264,7 @@ export const customization = [
     elements: 'label.icon',
     stylers: [
       {
-        color: '#808080',
+        color: '#cccccc',
       },
       {
         'secondary-color': '#ffffff',
@@ -2300,7 +2300,7 @@ export const customization = [
     elements: 'label.icon',
     stylers: [
       {
-        color: '#808080',
+        color: '#cccccc',
       },
       {
         'secondary-color': '#ffffff',
@@ -2337,7 +2337,7 @@ export const customization = [
     types: 'point',
     stylers: [
       {
-        color: '#808080',
+        color: '#cccccc',
       },
       {
         'secondary-color': '#ffffff',
@@ -2362,13 +2362,13 @@ export const customization = [
     elements: 'label.icon',
     stylers: [
       {
-        color: '#808080',
+        color: '#cccccc',
       },
       {
         'secondary-color': '#ffffff',
       },
       {
-        hue: '#808080',
+        hue: '#cccccc',
       },
     ],
   },
@@ -2377,7 +2377,7 @@ export const customization = [
     elements: 'label.icon',
     stylers: [
       {
-        color: '#808080',
+        color: '#cccccc',
       },
       {
         'secondary-color': '#ffffff',
@@ -5295,7 +5295,7 @@ export const customization = [
     elements: 'label.icon',
     stylers: [
       {
-        hue: '#808080',
+        hue: '#cccccc',
       },
       {
         saturation: -1,
@@ -6634,7 +6634,7 @@ export const customization = [
   },
   {
     tags: {
-      any: ['building', 'address', 'fence'],
+      any: ['road_construction', 'road_minor', 'road_unclassified', 'path', 'road_limited'],
     },
     stylers: {
       visibility: 'off',

@@ -1,6 +1,15 @@
 import { LngLat } from '@yandex/ymaps3-types';
 import { UploadFile } from 'antd';
 import { makeAutoObservable } from 'mobx';
+
+interface Route {
+  id: string;
+  place: string;
+  name: string;
+  description: string;
+  markersArray: Marker[];
+}
+
 interface Result {
   id: string;
   label: string;
@@ -24,6 +33,8 @@ class MainStore {
   marker: Marker | null = null;
 
   markers: Marker[] = [];
+
+  routes: Route[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -53,6 +64,10 @@ class MainStore {
 
   getMarker(id: number) {
     return this.markers.find((marker) => marker.id === id);
+  }
+
+  addRoute(route: Route) {
+    this.routes.push(route);
   }
 }
 

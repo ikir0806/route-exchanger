@@ -39,41 +39,26 @@ const MarkerPopup = ({ isEdit }: { isEdit: boolean }) => {
   return (
     <Observer>
       {() => (
-        <div id='popup' className='ol-popup'>
-          <a
-            onClick={() => mainStore.setMarker(null)}
-            href='#'
-            id='popup-closer'
-            className='ol-popup-closer'>
+        <div id='popup' className='popup'>
+          <a onClick={() => mainStore.setMarker(null)} href='#' className='popup-closer'>
             X
           </a>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className='ol-popup-input'
-          />
+          <input value={name} onChange={(e) => setName(e.target.value)} className='popup-input' />
           <br />
           <PointImages />
-          <div className='ol-popup-wrp'>
+          <div className='popup-wrp'>
             {isEdit ? (
-              <button
-                id='popup-confirm'
-                onClick={editMarker}
-                className='ol-popup-button ol-popup-confirm'>
+              <button onClick={editMarker} className='popup-button primary-button'>
                 Изменить
               </button>
             ) : (
-              <button
-                id='popup-confirm'
-                onClick={addMarker}
-                className='ol-popup-button ol-popup-confirm'>
+              <button onClick={addMarker} className='popup-button primary-button'>
                 Добавить
               </button>
             )}
             <button
               onClick={() => mainStore.setMarker(null)}
-              id='popup-cancel'
-              className='ol-popup-button ol-popup-cancel'>
+              className='popup-button default-button'>
               Отмена
             </button>
           </div>

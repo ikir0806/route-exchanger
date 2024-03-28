@@ -32,7 +32,7 @@ const PointImages: React.FC = () => {
             },
           }}>
           <Upload
-            className='ol-popup-images'
+            className='popup-images'
             beforeUpload={beforeUpload}
             onChange={onChange}
             listType='picture-card'
