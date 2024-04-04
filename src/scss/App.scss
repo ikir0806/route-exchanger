@@ -52,6 +52,22 @@ body::after {
   height: 100vh;
 }
 
+.constructor {
+  width: 100%;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.constructor-wrp {
+  width: 90vw;
+  margin-top: 20px;
+  margin-left: 5vw;
+}
+
+.constructor-input:focus-within {
+  box-shadow: none !important;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -306,7 +322,7 @@ body::after {
 }
 
 .map-container {
-  width: 100vw;
+  width: 100%;
   height: 80vh;
   display: flex;
   justify-content: center;
