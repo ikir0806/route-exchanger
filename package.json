@@ -27,6 +27,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0",
     "react-spinners": "^0.13.8",
+    "react-uid": "^2.3.3",
     "ymap3-components": "latest"
   },
   "devDependencies": {

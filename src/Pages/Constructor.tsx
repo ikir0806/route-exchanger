@@ -1,7 +1,26 @@
 import { ConfigProvider, Input } from 'antd';
+import { useContext, useState } from 'react';
 import MapProvider from '../Features/Map/MapProvider';
+import mainStore from '../store/mainStore';
+import { AuthContext } from '../utils/AuthContext';
 
 const Constructor = () => {
+  const { user } = useContext(AuthContext);
+  const [name, setName] = useState<string>('');
+  const [place, setPlace] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+
+  const saveRoute = () => {
+    console.log({
+      id: `${mainStore.routes.length + 1}`,
+      name: name,
+      place: place,
+      description: description,
+      markersArray: mainStore.markers,
+      author: user?.login,
+    });
+  };
+
   return (
     <div className='wrapper constructor'>
       <ConfigProvider
@@ -9,23 +28,44 @@ const Constructor = () => {
           token: {
             colorPrimary: '#21605e',
             borderRadius: 20,
-            colorBgContainer: '#f2f3f0',
+            colorBgContainer: '#fefefe',
           },
         }}>
         <div className='constructor-wrp'>
           <h3>Название маршрута</h3>
-          <Input className='constructor-input' allowClear />
+          <Input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className='constructor-input'
+            allowClear
+          />
+          <h3>Локация</h3>
+          <Input
+            value={place}
+            onChange={(e) => setPlace(e.target.value)}
+            className='constructor-input'
+            allowClear
+          />
           <h3>Описание маршрута</h3>
-          <Input.TextArea autoSize className='constructor-input' allowClear />
+          <Input.TextArea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            autoSize
+            className='constructor-input'
+            allowClear
+          />
         </div>
       </ConfigProvider>
 
       <div className='map-container'>
         <MapProvider />
       </div>
-
-      <a id='download' download></a>
-      <button>Сохранить</button>
+      <div className='constructor-buttons-wrp'>
+        <button className='default-button constructor-buttons'>Выгрузить маршрут</button>
+        <button onClick={saveRoute} className='primary-button constructor-buttons'>
+          Сохранить
+        </button>
+      </div>
     </div>
   );
 };

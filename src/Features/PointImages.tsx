@@ -1,12 +1,11 @@
-import type { GetProp, UploadProps } from 'antd';
+import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { ConfigProvider, Upload, message } from 'antd';
 import { Observer } from 'mobx-react';
-import React from 'react';
 import mainStore from '../store/mainStore';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
-const PointImages: React.FC = () => {
+const PointImages = ({ view, imagesArray }: { view: boolean; imagesArray?: UploadFile[] }) => {
   const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     mainStore.setImagesArray(newFileList);
   };
@@ -32,12 +31,13 @@ const PointImages: React.FC = () => {
             },
           }}>
           <Upload
+            disabled={view}
             className='popup-images'
             beforeUpload={beforeUpload}
             onChange={onChange}
             listType='picture-card'
-            fileList={mainStore.imagesArray}>
-            {mainStore.imagesArray?.length < 8 && '+ Прикрепить'}
+            fileList={view ? imagesArray : mainStore.imagesArray}>
+            {!view && mainStore.imagesArray?.length < 8 && '+ Прикрепить'}
           </Upload>
         </ConfigProvider>
       )}

@@ -45,7 +45,7 @@ const MarkerPopup = ({ isEdit }: { isEdit: boolean }) => {
           </a>
           <input value={name} onChange={(e) => setName(e.target.value)} className='popup-input' />
           <br />
-          <PointImages />
+          <PointImages view={false} />
           <div className='popup-wrp'>
             {isEdit ? (
               <button onClick={editMarker} className='popup-button primary-button'>

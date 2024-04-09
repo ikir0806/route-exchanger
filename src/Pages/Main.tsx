@@ -11,11 +11,7 @@ const Main = () => {
   const loadResults = () => {
     setLoading(true);
     setTimeout(() => {
-      mainStore.setResultsArray(
-        mainStore.resultsArray?.filter((item) =>
-          item.label.toLowerCase().includes(searchText.toLowerCase()),
-        ),
-      );
+      mainStore.getResultsArray(searchText);
       setLoading(false);
     }, 1000);
   };

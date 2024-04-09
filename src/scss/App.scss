@@ -16,6 +16,7 @@ h5 {
   margin: 0;
 }
 
+h2,
 h3 {
   font-weight: 400;
 }
@@ -28,6 +29,18 @@ a {
 button:hover,
 a:hover {
   cursor: pointer;
+  opacity: 0.7;
+}
+
+input {
+  padding: 0 10px !important;
+  box-sizing: border-box;
+}
+
+textarea {
+  min-height: 100px !important;
+  padding: 0 10px !important;
+  box-sizing: border-box;
 }
 
 body {
@@ -54,14 +67,35 @@ body::after {
 
 .constructor {
   width: 100%;
+  height: 100%;
   padding-left: 0 !important;
   padding-right: 0 !important;
+  position: relative;
 }
 
 .constructor-wrp {
   width: 90vw;
   margin-top: 20px;
   margin-left: 5vw;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+.constructor-buttons-wrp {
+  margin-top: 20px;
+  position: absolute;
+  bottom: 20px;
+  right: 5vw;
+  display: flex;
+  column-gap: 20px;
+}
+
+.constructor-buttons {
+  height: 35px;
+  padding: 0 15px;
+  width: fit-content;
 }
 
 .constructor-input:focus-within {
@@ -291,9 +325,17 @@ body::after {
   padding: 0;
   border-radius: 30px;
   border: 3px solid $main-color;
-  height: 20vh;
+  height: 25vh;
   display: flex;
-  justify-content: center;
+}
+
+.route-img {
+  border-radius: 30px 0 0 30px;
+}
+
+.route-info {
+  margin-left: 5vw;
+  padding-top: 10px;
 }
 
 .route-empty {
@@ -326,6 +368,7 @@ body::after {
   height: 80vh;
   display: flex;
   justify-content: center;
+  margin-bottom: 75px;
 }
 
 .marker {
@@ -402,7 +445,7 @@ body::after {
   margin-top: 10px;
   border-radius: 20px;
   border: 1px solid $main-color;
-  height: 25px;
+  height: 30px;
 }
 
 .popup-wrp {
@@ -435,18 +478,23 @@ body::after {
 
 .popup-button {
   border-radius: 20px;
-  width: 45%;
+  min-width: 45%;
+  width: fit-content;
+  padding: 0 15px;
+  height: 30px;
 }
 
 .primary-button {
   border: 1px solid $main-color;
   background: $main-color;
   color: $white;
+  border-radius: 20px;
 }
 
 .default-button {
   border: 1px solid $main-color;
   background: transparent;
+  border-radius: 20px;
 }
 
 .popup-list {
