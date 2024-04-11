@@ -87,6 +87,8 @@ class MainStore {
     },
   ];
 
+  route: Route | null = null;
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -127,6 +129,11 @@ class MainStore {
 
   addRoute(route: Route) {
     this.routes.push(route);
+  }
+
+  getRoute(id: string) {
+    this.route = this.routes.find((route) => route.id === id) || null;
+    this.markers = this.route?.markersArray || [];
   }
 }
 

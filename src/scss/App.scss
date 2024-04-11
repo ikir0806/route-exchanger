@@ -16,6 +16,7 @@ h5 {
   margin: 0;
 }
 
+h1,
 h2,
 h3 {
   font-weight: 400;
@@ -65,7 +66,7 @@ body::after {
   height: 100vh;
 }
 
-.constructor {
+.route {
   width: 100%;
   height: 100%;
   padding-left: 0 !important;
@@ -73,7 +74,7 @@ body::after {
   position: relative;
 }
 
-.constructor-wrp {
+.route-wrp {
   width: 90vw;
   margin-top: 20px;
   margin-left: 5vw;
@@ -83,7 +84,17 @@ body::after {
   row-gap: 10px;
 }
 
-.constructor-buttons-wrp {
+.route-author {
+  position: absolute;
+  top: 5vh;
+  right: 5vw;
+}
+
+.route-descr {
+  white-space: pre-wrap;
+}
+
+.route-buttons-wrp {
   margin-top: 20px;
   position: absolute;
   bottom: 20px;
@@ -92,13 +103,13 @@ body::after {
   column-gap: 20px;
 }
 
-.constructor-buttons {
+.route-buttons {
   height: 35px;
   padding: 0 15px;
   width: fit-content;
 }
 
-.constructor-input:focus-within {
+.route-input:focus-within {
   box-shadow: none !important;
 }
 
@@ -316,12 +327,12 @@ body::after {
   justify-content: center;
 }
 
-.route-list {
+.card-list {
   list-style-type: none;
   margin-top: 5vh;
 }
 
-.route-item {
+.card-item {
   padding: 0;
   border-radius: 30px;
   border: 3px solid $main-color;
@@ -329,16 +340,16 @@ body::after {
   display: flex;
 }
 
-.route-img {
+.card-img {
   border-radius: 30px 0 0 30px;
 }
 
-.route-info {
+.card-info {
   margin-left: 5vw;
   padding-top: 10px;
 }
 
-.route-empty {
+.card-empty {
   text-align: center;
   margin-top: 10vh;
 }

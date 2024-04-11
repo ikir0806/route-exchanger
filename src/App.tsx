@@ -7,6 +7,7 @@ import Constructor from './Pages/Constructor';
 import Main from './Pages/Main';
 import { Profile } from './Pages/Profile';
 import Registration from './Pages/Registration';
+import View from './Pages/View';
 import './scss/App.scss';
 import { AuthContext, AuthProvider } from './utils/AuthContext';
 
@@ -27,6 +28,7 @@ function App() {
         <Route element={<PrivateRoutes />}>
           <Route path='profile' element={<Profile />} />
           <Route path='constructor' element={<Constructor />} />
+          <Route path='view/:id' element={<View />} />
         </Route>
         <Route path='authorization' element={<Authorization />} />
         <Route path='registration' element={<Registration />} />

@@ -1,5 +1,6 @@
 import { Observer } from 'mobx-react';
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import { PuffLoader } from 'react-spinners';
 import mainStore from '../store/mainStore';
 import PointImages from './PointImages';
@@ -19,11 +20,15 @@ const SearchResults: FC<SearchResultsProps> = ({ loading }) => {
     <Observer>
       {() =>
         mainStore.resultsArray?.length > 0 ? (
-          <li className='route-list'>
+          <div className='card-list'>
             {mainStore.resultsArray?.map((result) => (
-              <ul key={result.id} className='route-item'>
-                <img src='./moscow.png' className='route-img' />
-                <div className='route-info'>
+              <Link
+                onClick={() => mainStore.getRoute(result.id)}
+                to={`/view/${result.id}`}
+                key={result.id}
+                className='card-item'>
+                <img src='./moscow.png' className='card-img' />
+                <div className='card-info'>
                   <h2>{result.name}</h2>
                   <p>{result.place}</p>
                   <PointImages
@@ -33,11 +38,11 @@ const SearchResults: FC<SearchResultsProps> = ({ loading }) => {
                     )}
                   />
                 </div>
-              </ul>
+              </Link>
             ))}
-          </li>
+          </div>
         ) : (
-          <h2 className='route-empty'>К сожалению, ничего не нашлось</h2>
+          <h2 className='roucardte-empty'>К сожалению, ничего не нашлось</h2>
         )
       }
     </Observer>

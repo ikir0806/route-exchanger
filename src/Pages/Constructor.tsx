@@ -22,7 +22,7 @@ const Constructor = () => {
   };
 
   return (
-    <div className='wrapper constructor'>
+    <div className='wrapper route'>
       <ConfigProvider
         theme={{
           token: {
@@ -31,19 +31,19 @@ const Constructor = () => {
             colorBgContainer: '#fefefe',
           },
         }}>
-        <div className='constructor-wrp'>
+        <div className='route-wrp'>
           <h3>Название маршрута</h3>
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className='constructor-input'
+            className='route-input'
             allowClear
           />
           <h3>Локация</h3>
           <Input
             value={place}
             onChange={(e) => setPlace(e.target.value)}
-            className='constructor-input'
+            className='route-input'
             allowClear
           />
           <h3>Описание маршрута</h3>
@@ -51,7 +51,7 @@ const Constructor = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             autoSize
-            className='constructor-input'
+            className='route-input'
             allowClear
           />
         </div>
@@ -60,9 +60,9 @@ const Constructor = () => {
       <div className='map-container'>
         <MapProvider />
       </div>
-      <div className='constructor-buttons-wrp'>
-        <button className='default-button constructor-buttons'>Выгрузить маршрут</button>
-        <button onClick={saveRoute} className='primary-button constructor-buttons'>
+      <div className='route-buttons-wrp'>
+        <button className='default-button route-buttons'>Выгрузить маршрут</button>
+        <button onClick={saveRoute} className='primary-button route-buttons'>
           Сохранить
         </button>
       </div>
