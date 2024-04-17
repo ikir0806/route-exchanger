@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PuffLoader } from 'react-spinners';
 import { signUp } from '../Services/firebase';
 
@@ -87,7 +87,7 @@ function Registration() {
     <div className='form-wrapper'>
       <h1 className='form-title'>Регистрация</h1>
       <form className='form' onSubmit={handleSubmit}>
-        <h3>Введите почту</h3>
+        <h3 className='form-text'>Введите почту</h3>
         <input
           onChange={() => clearError('invalidEmail')}
           className='form-input'
@@ -95,7 +95,7 @@ function Registration() {
           name='email'
         />
         {errors.invalidEmail && <span className='error-text'>Некорректный email</span>}
-        <h3>Введите логин</h3>
+        <h3 className='form-text'>Введите логин</h3>
         <input
           onChange={() => clearError('invalidLogin')}
           className='form-input'
@@ -105,7 +105,7 @@ function Registration() {
         {errors.invalidLogin && (
           <span className='error-text'>Логин должен быть не менее 7 символов в длину</span>
         )}
-        <h3>Введите пароль</h3>
+        <h3 className='form-text'>Введите пароль</h3>
         <input
           onChange={() => clearError('invalidPassword')}
           className='form-input'
@@ -115,7 +115,7 @@ function Registration() {
         {errors.invalidPassword && (
           <span className='error-text'>Пароль должен быть не менее 7 символов в длину</span>
         )}
-        <h3>Повторите пароль</h3>
+        <h3 className='form-text'>Повторите пароль</h3>
         <input
           onChange={() => clearError('notEqualPasswords')}
           className='form-input'
@@ -133,6 +133,7 @@ function Registration() {
           </button>
         )}
         {error && <span className='error-text'>{error}</span>}
+        <Link to='/authorization'>Уже есть аккаунт? Авторизуйтесь</Link>
       </form>
     </div>
   );

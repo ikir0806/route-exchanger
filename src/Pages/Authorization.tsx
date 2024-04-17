@@ -1,6 +1,6 @@
 import { doc, getDoc } from 'firebase/firestore';
 import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PuffLoader } from 'react-spinners';
 import { FIRESTORE_DB, logIn } from '../Services/firebase';
 import { AuthContext } from '../utils/AuthContext';
@@ -53,14 +53,14 @@ function Authorization() {
     <div className='form-wrapper'>
       <h1 className='form-title'>Авторизация</h1>
       <form className='form' onSubmit={handleSubmit}>
-        <h3>Введите почту</h3>
+        <h3 className='form-text'>Введите почту</h3>
         <input
           onChange={() => error && setError(null)}
           className='form-input'
           type='text'
           name='email'
         />
-        <h3>Введите пароль</h3>
+        <h3 className='form-text'>Введите пароль</h3>
         <input
           onChange={() => error && setError(null)}
           className='form-input'
@@ -77,6 +77,7 @@ function Authorization() {
           </button>
         )}
         {error && <span className='error-text'>{error}</span>}
+        <Link to='/registration'>Нет аккаунта? Зарегистрируйтесь</Link>
       </form>
     </div>
   );
