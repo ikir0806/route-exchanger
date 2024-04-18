@@ -60,7 +60,7 @@ body::after {
 
 .wrapper {
   border-radius: 20px;
-  padding: 2vh;
+  padding: 2vh 2vw;
   background-color: $white;
   background-size: cover;
   height: 100vh;
@@ -94,18 +94,18 @@ body::after {
   white-space: pre-wrap;
 }
 
-.route-buttons-wrp {
+.action-buttons-wrp {
   margin-top: 20px;
   position: absolute;
   bottom: 20px;
-  right: 5vw;
+  right: 2vw;
   display: flex;
   column-gap: 20px;
 }
 
-.route-buttons {
-  height: 35px;
-  padding: 0 15px;
+.action-buttons {
+  height: 45px;
+  padding: 0 45px;
   width: fit-content;
 }
 
@@ -521,4 +521,39 @@ body::after {
 
 .popup-images {
   margin-top: 10px;
+}
+
+.avatar {
+  margin-right: 5vw;
+  width: auto !important;
+}
+
+.avatar > .ant-upload-list > .ant-upload-select,
+.avatar > .ant-upload-list > .ant-upload-list-item-container {
+  height: 300px !important;
+  width: 300px !important;
+}
+
+.profile {
+  position: relative;
+}
+
+.profile-wrp {
+  display: flex;
+}
+
+.profile-login {
+  margin-bottom: 20px;
+}
+
+.profile-routes {
+  margin-top: 200px !important;
+}
+
+.profile-edit {
+  position: absolute;
+  right: 2vw;
+  width: 30px;
+  height: 30px;
+  color: $dark-grey;
 }

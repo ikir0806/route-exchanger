@@ -60,9 +60,9 @@ const Constructor = () => {
       <div className='map-container'>
         <MapProvider />
       </div>
-      <div className='route-buttons-wrp'>
-        <button className='default-button route-buttons'>Выгрузить маршрут</button>
-        <button onClick={saveRoute} className='primary-button route-buttons'>
+      <div className='action-buttons-wrp'>
+        <button className='default-button action-buttons'>Выгрузить маршрут</button>
+        <button onClick={saveRoute} className='primary-button action-buttons'>
           Сохранить
         </button>
       </div>

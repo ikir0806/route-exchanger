@@ -18,6 +18,15 @@ interface Marker {
   imagesArray: UploadFile[];
 }
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  description: string;
+  isOrg: boolean;
+  routesArray: Route[];
+}
+
 class MainStore {
   resultsArray: Array<Route> = [];
 
@@ -88,6 +97,16 @@ class MainStore {
   ];
 
   route: Route | null = null;
+
+  user: User | null = {
+    id: '1',
+    name: 'Kirill Makarov',
+    email: 'kirill@gmail.com',
+    description:
+      'Шапка профиля — это первое, на что смотрит пользователь в вашем аккаунте. По первым строчкам человек понимает, что это за страница и интересна ли она ему, поэтому важно грамотно оформить описание и кратко презентовать бренд посетителю.',
+    routesArray: this.routes,
+    isOrg: false,
+  };
 
   constructor() {
     makeAutoObservable(this);
