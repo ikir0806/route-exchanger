@@ -1,9 +1,11 @@
-import { doc, getDoc } from 'firebase/firestore';
+import { setCookie } from 'nookies';
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PuffLoader } from 'react-spinners';
-import { FIRESTORE_DB, logIn } from '../Services/firebase';
 import { AuthContext } from '../utils/AuthContext';
+
+import axios from 'axios';
+import * as Api from '../api';
 
 function Authorization() {
   const navigate = useNavigate();
@@ -11,7 +13,7 @@ function Authorization() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleSubmit = (e: React.SyntheticEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     setLoading(true);
     e?.preventDefault();
     const targetFields = e.target as typeof e.target & {
@@ -24,29 +26,53 @@ function Authorization() {
       password: targetFields.password.value,
     };
 
-    logIn(fields.email, fields.password)
-      .then(async (res) => {
-        await getDoc(doc(FIRESTORE_DB, `users/${res.user.uid}`)).then(async (userData) => {
-          const user = {
-            email: userData.data()?.email,
-            login: userData.data()?.login,
-          };
-          setUser(user);
-          localStorage.setItem('user', JSON.stringify(user));
-        });
-        navigate('/');
-      })
-      .catch((error) => {
-        switch (error.code) {
-          case 'auth/invalid-credential':
+    try {
+      const { token } = await Api.auth.login(fields);
+
+      setCookie(null, '_token', token, {
+        path: '/',
+      });
+      setLoading(false);
+      navigate('/');
+    } catch (e) {
+      setLoading(false);
+      if (axios.isAxiosError(e)) {
+        switch (e.code) {
+          case 'ERR_BAD_REQUEST':
             return setError('Неверный логин или пароль');
-          case 'auth/network-request-failed':
+          case 'ERR_NETWORK':
             return setError('Ошибка сети. Проверьте подключение к интернету');
           default:
             return setError('Ошибка авторизации');
         }
-      })
-      .finally(() => setLoading(false));
+      } else {
+        return setError('Ошибка авторизации');
+      }
+    }
+
+    // logIn(fields)
+    //   .then(async (res) => {
+    //     // await getDoc(doc(FIRESTORE_DB, `users/${res.user.uid}`)).then(async (userData) => {
+    //     //   const user = {
+    //     //     email: userData.data()?.email,
+    //     //     login: userData.data()?.login,
+    //     //   };
+    //     //   setUser(user);
+    //     //   localStorage.setItem('user', JSON.stringify(user));
+    //     // });
+    //     // navigate('/');
+    //   })
+    //   .catch((error) => {
+    //     switch (error.code) {
+    //       case 'auth/invalid-credential':
+    //         return setError('Неверный логин или пароль');
+    //       case 'auth/network-request-failed':
+    //         return setError('Ошибка сети. Проверьте подключение к интернету');
+    //       default:
+    //         return setError('Ошибка авторизации');
+    //     }
+    //   })
+    //   .finally(() => setLoading(false));
   };
 
   return (
