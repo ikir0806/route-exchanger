@@ -1,15 +1,13 @@
 import { setCookie } from 'nookies';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PuffLoader } from 'react-spinners';
-import { AuthContext } from '../utils/AuthContext';
 
 import axios from 'axios';
 import * as Api from '../api';
 
 function Authorization() {
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -34,10 +32,10 @@ function Authorization() {
       });
       setLoading(false);
       navigate('/');
-    } catch (e) {
+    } catch (error) {
       setLoading(false);
-      if (axios.isAxiosError(e)) {
-        switch (e.code) {
+      if (axios.isAxiosError(error)) {
+        switch (error.code) {
           case 'ERR_BAD_REQUEST':
             return setError('Неверный логин или пароль');
           case 'ERR_NETWORK':
@@ -49,30 +47,6 @@ function Authorization() {
         return setError('Ошибка авторизации');
       }
     }
-
-    // logIn(fields)
-    //   .then(async (res) => {
-    //     // await getDoc(doc(FIRESTORE_DB, `users/${res.user.uid}`)).then(async (userData) => {
-    //     //   const user = {
-    //     //     email: userData.data()?.email,
-    //     //     login: userData.data()?.login,
-    //     //   };
-    //     //   setUser(user);
-    //     //   localStorage.setItem('user', JSON.stringify(user));
-    //     // });
-    //     // navigate('/');
-    //   })
-    //   .catch((error) => {
-    //     switch (error.code) {
-    //       case 'auth/invalid-credential':
-    //         return setError('Неверный логин или пароль');
-    //       case 'auth/network-request-failed':
-    //         return setError('Ошибка сети. Проверьте подключение к интернету');
-    //       default:
-    //         return setError('Ошибка авторизации');
-    //     }
-    //   })
-    //   .finally(() => setLoading(false));
   };
 
   return (

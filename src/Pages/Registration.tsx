@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PuffLoader } from 'react-spinners';
-import { signUp } from '../Services/firebase';
+
+import axios from 'axios';
+import { setCookie } from 'nookies';
+import * as Api from '../api';
 
 interface Fields {
   email: string;
@@ -29,7 +32,7 @@ function Registration() {
 
   const navigate = useNavigate();
 
-  const handleValidation = (fields: Fields) => {
+  const handleValidation = async (fields: Fields) => {
     const tempErrors: Errors = {
       invalidEmail: fields.email.length < 6 ? true : false,
       invalidLogin: fields.login.length < 6 ? true : false,
@@ -37,9 +40,18 @@ function Registration() {
       notEqualPasswords: fields.password !== fields.secondPassword ? true : false,
     };
     if (!Object.values(tempErrors).some((error) => error)) {
-      signUp(fields.email, fields.password, fields.login)
-        .then(() => navigate('/authorization'))
-        .catch((error) => {
+      try {
+        const { token } = await Api.auth.register(fields);
+
+        setCookie(null, '_token', token, {
+          path: '/',
+        });
+        setLoading(false);
+        navigate('/');
+      } catch (error) {
+        setLoading(false);
+        console.log(error)
+        if (axios.isAxiosError(error)) {
           switch (error.code) {
             case 'auth/email-already-in-use':
               return setError('Пользователь с такой почтой уже зарегестрирован');
@@ -48,8 +60,10 @@ function Registration() {
             default:
               return setError('Ошибка регистрации');
           }
-        })
-        .finally(() => setLoading(false));
+        } else {
+          return setError('Ошибка авторизации');
+        }
+      }
     } else {
       setErrors(tempErrors);
       setLoading(false);
