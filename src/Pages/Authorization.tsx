@@ -1,12 +1,14 @@
-import { setCookie } from 'nookies';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PuffLoader } from 'react-spinners';
 
 import axios from 'axios';
 import * as Api from '../api';
+import { AuthContext } from '../utils/AuthContext';
+import { checkAuth } from '../utils/checkAuth';
 
 function Authorization() {
+  const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -27,9 +29,10 @@ function Authorization() {
     try {
       const { token } = await Api.auth.login(fields);
 
-      setCookie(null, '_token', token, {
-        path: '/',
-      });
+      localStorage.setItem('userToken', token);
+      checkAuth()
+        .then((data) => data && setUser(data))
+        .catch((e) => console.error(e));
       setLoading(false);
       navigate('/');
     } catch (error) {

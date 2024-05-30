@@ -1,12 +1,9 @@
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
+import { User } from '../api/dto/auth.dto';
+import { checkAuth } from './checkAuth';
 
 type Props = {
   children?: ReactNode;
-};
-
-type User = {
-  email: string;
-  login: string;
 };
 
 type IAuthContext = {
@@ -15,14 +12,23 @@ type IAuthContext = {
 };
 
 const initialValue = {
-  user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '') : null,
+  user: null,
   setUser: () => {},
 };
 
 const AuthContext = createContext<IAuthContext>(initialValue);
 
 const AuthProvider = ({ children }: Props) => {
-  const [user, setUser] = useState<User | null>(initialValue.user);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('userToken');
+    if (token) {
+      checkAuth()
+        .then((data) => data && setUser(data))
+        .catch((e) => console.error(e));
+    }
+  }, []);
 
   return <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>;
 };

@@ -17,7 +17,9 @@ function Header() {
       </Link>
       <div className='header-wrp'>
         <Link className='header-item' to='/profile'>
-          <h3 className='white-text'>Язык</h3>
+          <h3 onMouseEnter={() => console.log(user)} className='white-text'>
+            Язык
+          </h3>
           {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
         </Link>
         {!user && (
@@ -60,7 +62,7 @@ function Header() {
                 <button
                   className='modal-profile-logout'
                   onClick={() => {
-                    setUser(null);
+                    setUser && setUser(null);
                     localStorage.removeItem('user');
                   }}>
                   Выйти

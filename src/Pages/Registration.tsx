@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PuffLoader } from 'react-spinners';
 
 import axios from 'axios';
-import { setCookie } from 'nookies';
 import * as Api from '../api';
+import { AuthContext } from '../utils/AuthContext';
+import { checkAuth } from '../utils/checkAuth';
 
 interface Fields {
   email: string;
@@ -21,6 +22,7 @@ interface Errors {
 }
 
 function Registration() {
+  const { setUser } = useContext(AuthContext);
   const [errors, setErrors] = useState<Errors>({
     invalidEmail: false,
     invalidLogin: false,
@@ -43,25 +45,25 @@ function Registration() {
       try {
         const { token } = await Api.auth.register(fields);
 
-        setCookie(null, '_token', token, {
-          path: '/',
-        });
+        localStorage.setItem('userToken', token);
+        checkAuth()
+          .then((data) => data && setUser(data))
+          .catch((e) => console.error(e));
         setLoading(false);
         navigate('/');
       } catch (error) {
         setLoading(false);
-        console.log(error)
         if (axios.isAxiosError(error)) {
-          switch (error.code) {
-            case 'auth/email-already-in-use':
-              return setError('Пользователь с такой почтой уже зарегестрирован');
-            case 'auth/network-request-failed':
+          switch (error.message) {
+            case 'Request failed with status code 400':
+              return setError('Пользователь с такими почтой или логином уже зарегестрирован');
+            case 'Network Error':
               return setError('Ошибка сети. Проверьте подключение к интернету');
             default:
               return setError('Ошибка регистрации');
           }
         } else {
-          return setError('Ошибка авторизации');
+          return setError('Ошибка регистрации');
         }
       }
     } else {
