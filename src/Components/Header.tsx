@@ -2,6 +2,7 @@ import { faMap } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { logOut } from '../api/auth';
 import { AuthContext } from '../utils/AuthContext';
 
 function Header() {
@@ -63,7 +64,8 @@ function Header() {
                   className='modal-profile-logout'
                   onClick={() => {
                     setUser && setUser(null);
-                    localStorage.removeItem('user');
+                    logOut();
+                    localStorage.removeItem('userToken');
                   }}>
                   Выйти
                 </button>

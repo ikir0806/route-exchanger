@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { PuffLoader } from 'react-spinners';
 
 import axios from 'axios';
+import { setCookie } from 'nookies';
 import * as Api from '../api';
 import { AuthContext } from '../utils/AuthContext';
 import { checkAuth } from '../utils/checkAuth';
@@ -44,6 +45,10 @@ function Registration() {
     if (!Object.values(tempErrors).some((error) => error)) {
       try {
         const { token } = await Api.auth.register(fields);
+
+        setCookie(null, '_token', token, {
+          path: '/',
+        });
 
         localStorage.setItem('userToken', token);
         checkAuth()
