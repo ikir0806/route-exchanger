@@ -10,6 +10,7 @@ export interface LoginResponseDto {
 export interface User {
   id: number;
   email: string;
+  description: string;
   login: string;
 }
 

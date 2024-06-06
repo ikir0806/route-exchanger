@@ -442,7 +442,7 @@ body::after {
   border-radius: 20px;
   padding: 10px;
   gap: 10px;
-  min-width: 40vw;
+  min-width: 41vw;
   max-width: 50vw;
   z-index: 1000;
 }
@@ -542,10 +542,6 @@ body::after {
   display: flex;
 }
 
-.profile-login {
-  margin-bottom: 20px;
-}
-
 .profile-routes {
   margin-top: 200px !important;
 }
@@ -556,4 +552,43 @@ body::after {
   width: 30px;
   height: 30px;
   color: $dark-grey;
+}
+
+.profile-info {
+  width: 100%;
+  position: relative;
+}
+
+.profile-info-img {
+  margin: auto 0;
+  height: 1.25em;
+}
+
+.profile-info-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.profile-info-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.profile-buttons-wrp {
+  margin-top: 20px;
+  right: 2vw;
+  display: flex;
+  column-gap: 20px;
+}
+
+.avatar {
+  min-width: 200px;
+  min-height: 200px;
+}
+
+.avatar > .ant-upload-select {
+  width: 100% !important;
+  height: 100% !important;
 }
