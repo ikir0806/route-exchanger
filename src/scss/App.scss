@@ -526,6 +526,8 @@ body::after {
 .avatar {
   margin-right: 5vw;
   width: auto !important;
+  min-width: 300px !important;
+  min-height: 300px !important;
 }
 
 .avatar > .ant-upload-list > .ant-upload-select,
@@ -601,6 +603,10 @@ body::after {
 
 .profile-fields-description {
   width: 70%;
+}
+
+.profile-fields-description:focus-within {
+  box-shadow: none !important;
 }
 
 .avatar {

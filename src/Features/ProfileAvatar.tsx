@@ -2,7 +2,10 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import type { GetProp, UploadProps } from 'antd';
 import { ConfigProvider, Upload, message } from 'antd';
 import { Observer } from 'mobx-react';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+
+import * as Api from '../api';
+import { AuthContext } from '../utils/AuthContext';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -20,6 +23,12 @@ const ProfileAvatar = ({
   setImageUrl: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!user) return;
+    Api.avatar.get(user.id).then((res) => console.log(res));
+  }, []);
 
   const handleChange: UploadProps['onChange'] = (info) => {
     if (info.file.status === 'uploading') {
@@ -45,10 +54,16 @@ const ProfileAvatar = ({
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const dummyRequest = (options: any) => {
-    setTimeout(() => {
-      options.onSuccess('ok');
-    }, 0);
+  const onUploadSuccess = async (options: any) => {
+    if (!user) return;
+
+    try {
+      await Api.avatar.uploadFile(user.id, options);
+
+      // window.location.reload();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const uploadButton = (
@@ -80,8 +95,8 @@ const ProfileAvatar = ({
             },
           }}>
           <Upload
+            customRequest={onUploadSuccess}
             showUploadList={false}
-            customRequest={dummyRequest}
             accept='.png, .jpg'
             className='avatar'
             beforeUpload={beforeUpload}

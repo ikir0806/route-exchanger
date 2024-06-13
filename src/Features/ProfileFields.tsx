@@ -1,4 +1,4 @@
-import { Input } from 'antd';
+import { ConfigProvider, Input } from 'antd';
 import { useContext, useState } from 'react';
 import * as Api from '../api';
 import { AuthContext } from '../utils/AuthContext';
@@ -30,8 +30,15 @@ const ProfileFields = () => {
     <>
       <div className='profile-info'>
         {isEdit ? (
-          <>
-            <input
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: '#21605e',
+                borderRadius: 20,
+                colorBgContainer: '#fefefe',
+              },
+            }}>
+            <Input
               value={login}
               placeholder='Имя пользователя'
               className='profile-fields'
@@ -43,7 +50,7 @@ const ProfileFields = () => {
               className='profile-fields profile-fields-description'
               onChange={(e) => setDescription(e.target.value)}
             />
-          </>
+          </ConfigProvider>
         ) : (
           <>
             <h1 className='profile-text'>{user?.login}</h1>
