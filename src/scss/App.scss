@@ -556,6 +556,9 @@ body::after {
 
 .profile-info {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
   position: relative;
 }
 
@@ -581,6 +584,23 @@ body::after {
   right: 2vw;
   display: flex;
   column-gap: 20px;
+}
+
+.profile-fields {
+  display: block;
+  border: 1px solid $main-color;
+  outline: none;
+  border-radius: 16px;
+  width: fit-content;
+  height: 50px;
+  padding-left: 2vw;
+  background: transparent;
+  color: $dark-grey;
+  text-decoration: none;
+}
+
+.profile-fields-description {
+  width: 70%;
 }
 
 .avatar {

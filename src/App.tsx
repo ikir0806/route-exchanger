@@ -14,7 +14,7 @@ import { AuthContext, AuthProvider } from './utils/AuthContext';
 const PrivateRoutes = () => {
   const { user } = useContext(AuthContext);
 
-  if (!user) return <Navigate to='/authorization' replace />;
+  if (!user) return <Navigate to='/' replace />;
 
   return <Outlet />;
 };

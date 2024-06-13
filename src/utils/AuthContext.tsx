@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
-import { User } from '../api/dto/auth.dto';
+import { UserFormDto } from '../api/dto/user.dto';
 import { checkAuth } from './checkAuth';
 
 type Props = {
@@ -7,8 +7,8 @@ type Props = {
 };
 
 type IAuthContext = {
-  user: User | null;
-  setUser: (newState: User | null) => void;
+  user: UserFormDto | null;
+  setUser: (newState: UserFormDto | null) => void;
 };
 
 const initialValue = {
@@ -19,7 +19,7 @@ const initialValue = {
 const AuthContext = createContext<IAuthContext>(initialValue);
 
 const AuthProvider = ({ children }: Props) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserFormDto | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');

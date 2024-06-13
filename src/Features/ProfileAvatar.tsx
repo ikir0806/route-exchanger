@@ -27,6 +27,7 @@ const ProfileAvatar = ({
       return;
     }
     if (info.file.status === 'done') {
+      console.log(info.file);
       getBase64(info.file.originFileObj as FileType, (url) => {
         setLoading(false);
         setImageUrl(url);

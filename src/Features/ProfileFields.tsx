@@ -1,23 +1,52 @@
+import { Input } from 'antd';
 import { useContext, useState } from 'react';
+import * as Api from '../api';
 import { AuthContext } from '../utils/AuthContext';
+import { checkAuth } from '../utils/checkAuth';
 
 const ProfileFields = () => {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [login, setLogin] = useState<string | undefined>(user?.login);
   const [description, setDescription] = useState<string | undefined>(user?.description);
+
+  const onSave = () => {
+    if (!user) return;
+
+    Api.user
+      .update({
+        id: user.id,
+        login: login || user.login,
+        description: description || user?.description || '',
+      })
+      .then(() => {
+        checkAuth()
+          .then((data) => data && setUser(data))
+          .catch((e) => console.error(e));
+      });
+  };
 
   return (
     <>
       <div className='profile-info'>
         {isEdit ? (
           <>
-            <input value={login} onChange={(e) => setLogin(e.target.value)} />
-            <input value={description} onChange={(e) => setDescription(e.target.value)} />
+            <input
+              value={login}
+              placeholder='Имя пользователя'
+              className='profile-fields'
+              onChange={(e) => setLogin(e.target.value)}
+            />
+            <Input.TextArea
+              value={description}
+              placeholder='Описаниие'
+              className='profile-fields profile-fields-description'
+              onChange={(e) => setDescription(e.target.value)}
+            />
           </>
         ) : (
           <>
-            <h1 className='profile-text profile-login'>{user?.login}</h1>
+            <h1 className='profile-text'>{user?.login}</h1>
             <h3 className='profile-text'>{user?.description}</h3>
           </>
         )}
@@ -29,6 +58,7 @@ const ProfileFields = () => {
               </button>
               <button
                 onClick={() => {
+                  onSave();
                   setIsEdit(false);
                 }}
                 className='primary-button action-buttons'>
