@@ -2,11 +2,11 @@ import axios from 'axios';
 import { ImageItem } from './dto/image.dto';
 
 export const get = async (userId: number): Promise<ImageItem> => {
-  return (await axios.get('/images?userId=' + userId)).data;
+  return (await axios.get('/avatar?userId=' + userId)).data;
 };
 
 export const remove = (id: number): Promise<void> => {
-  return axios.delete('/images?id=' + id);
+  return axios.delete('/avatar?id=' + id);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

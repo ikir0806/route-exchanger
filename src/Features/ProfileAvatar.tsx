@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 
 import * as Api from '../api';
 import { AuthContext } from '../utils/AuthContext';
+import { isImage } from '../utils/isImage';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -27,7 +28,11 @@ const ProfileAvatar = ({
 
   useEffect(() => {
     if (!user) return;
-    Api.avatar.get(user.id).then((res) => console.log(res));
+    Api.avatar.get(user.id).then((res) => {
+      const ext = res?.filename.split('.').pop();
+      const imageUrl = ext && isImage(ext) ? 'http://localhost:7777/uploads/' + res?.filename : '';
+      return setImageUrl(imageUrl);
+    });
   }, []);
 
   const handleChange: UploadProps['onChange'] = (info) => {
@@ -104,10 +109,13 @@ const ProfileAvatar = ({
             listType='picture-card'>
             {imageUrl ? (
               <img
+                onMouseEnter={() => console.log(imageUrl)}
                 src={imageUrl}
                 alt='avatar'
                 style={{
                   width: '100%',
+                  maxWidth: '50vw',
+                  maxHeight: '50vh',
                 }}
               />
             ) : (
