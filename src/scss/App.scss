@@ -45,7 +45,7 @@ textarea {
 }
 
 body {
-  background-color: $main-color;
+  background-color: $white;
   height: 100vh;
   display: table;
   width: 100%;
@@ -129,7 +129,7 @@ body::after {
 }
 
 .icon-img {
-  color: $white;
+  color: $dark-grey;
   width: 30px;
   height: 30px;
 }
@@ -144,7 +144,6 @@ body::after {
   border: none;
   background: transparent;
   border-radius: 50%;
-  color: $white;
   font-weight: bold;
 }
 
@@ -155,14 +154,16 @@ body::after {
   opacity: 0.7;
 }
 
-.header-user > h3 {
-  color: $white;
-}
-
 .header-item {
   display: flex;
   align-items: center;
   column-gap: 1px;
+}
+
+.header-enter {
+  background-color: $accent;
+  border-radius: 16px;
+  padding: 12px;
 }
 
 .header-item:focus,
@@ -278,6 +279,13 @@ body::after {
   background: $white;
 }
 
+.search-text {
+  width: 60%;
+  text-align: center;
+  margin: auto;
+  font-size: xx-large;
+}
+
 .search-button {
   right: 1vw;
   position: absolute;
@@ -306,7 +314,7 @@ body::after {
 }
 
 .search-icon {
-  color: $main-color;
+  color: $dark-grey;
 }
 
 .search-input {

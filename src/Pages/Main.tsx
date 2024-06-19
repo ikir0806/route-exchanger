@@ -19,6 +19,9 @@ const Main = () => {
   return (
     <div className='wrapper'>
       <div className='search'>
+        <h1 className='search-text white-text'>
+          Discover and share amazing routes around the world
+        </h1>
         <div className='search-form'>
           <input
             onKeyDown={(e) => e.key === 'Enter' && loadResults()}

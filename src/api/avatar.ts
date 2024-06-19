@@ -5,8 +5,8 @@ export const get = async (userId: number): Promise<ImageItem> => {
   return (await axios.get('/avatar?userId=' + userId)).data;
 };
 
-export const remove = (id: number): Promise<void> => {
-  return axios.delete('/avatar?id=' + id);
+export const remove = (userId: number): Promise<void> => {
+  return axios.delete('/avatar?userId=' + userId);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -14,24 +14,18 @@ function Header() {
     <div className='header'>
       <Link className='icon' to='/'>
         <FontAwesomeIcon icon={faMap} className='icon-img' />
-        <h1 className='white-text'>{/* 𝘛𝘶𝘵𝘰𝘤𝘩𝘬𝘢 */}Tutochka</h1>
+        <h1 /* className='white-text' */>{/* 𝘛𝘶𝘵𝘰𝘤𝘩𝘬𝘢 */}Tutochka</h1>
       </Link>
       <div className='header-wrp'>
         <Link className='header-item' to='/profile'>
-          <h3 onMouseEnter={() => console.log(user)} className='white-text'>
-            Язык
-          </h3>
+          <h3 onMouseEnter={() => console.log(user)} /* className='white-text' */>Язык</h3>
           {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
         </Link>
         {!user && (
           <>
-            <Link className='header-item' to='/authorization'>
+            <Link className='header-item header-enter' to='/authorization'>
               {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
-              <h3 className='white-text'>Авторизация</h3>
-            </Link>
-            <Link className='header-item' to='/registration'>
-              {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
-              <h3 className='white-text'>Регистрация</h3>
+              <h3 className='white-text'>Войти</h3>
             </Link>
           </>
         )}

@@ -16,21 +16,17 @@ const getBase64 = (img: FileType, callback: (url: string) => void) => {
   reader.readAsDataURL(img);
 };
 
-const ProfileAvatar = ({
-  imageUrl,
-  setImageUrl,
-}: {
-  imageUrl: string;
-  setImageUrl: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+const ProfileAvatar = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [imageUrl, setImageUrl] = useState<string>('');
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
     if (!user) return;
     Api.avatar.get(user.id).then((res) => {
       const ext = res?.filename.split('.').pop();
-      const imageUrl = ext && isImage(ext) ? 'http://localhost:7777/uploads/' + res?.filename : '';
+      const imageUrl =
+        ext && isImage(ext) ? 'http://localhost:7777/uploads/avatars/' + res?.filename : '';
       return setImageUrl(imageUrl);
     });
   }, []);
@@ -63,7 +59,13 @@ const ProfileAvatar = ({
     if (!user) return;
 
     try {
-      await Api.avatar.uploadFile(user.id, options);
+      if (imageUrl) {
+        await Api.avatar
+          .remove(user.id)
+          .then(async () => await Api.avatar.uploadFile(user.id, options));
+      } else {
+        await Api.avatar.uploadFile(user.id, options);
+      }
 
       // window.location.reload();
     } catch (e) {
@@ -109,7 +111,6 @@ const ProfileAvatar = ({
             listType='picture-card'>
             {imageUrl ? (
               <img
-                onMouseEnter={() => console.log(imageUrl)}
                 src={imageUrl}
                 alt='avatar'
                 style={{
