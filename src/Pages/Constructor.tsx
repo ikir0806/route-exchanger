@@ -7,14 +7,14 @@ import { AuthContext } from '../utils/AuthContext';
 const Constructor = () => {
   const { user } = useContext(AuthContext);
   const [name, setName] = useState<string>('');
-  const [place, setPlace] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
   const [description, setDescription] = useState<string>('');
 
   const saveRoute = () => {
     console.log({
       id: `${mainStore.routes.length + 1}`,
       name: name,
-      place: place,
+      location: location,
       description: description,
       markersArray: mainStore.markers,
       author: user?.login,
@@ -41,8 +41,8 @@ const Constructor = () => {
           />
           <h3>Локация</h3>
           <Input
-            value={place}
-            onChange={(e) => setPlace(e.target.value)}
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
             className='route-input'
             allowClear
           />
