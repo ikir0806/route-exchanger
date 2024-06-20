@@ -5,6 +5,7 @@ import PointImages from '../PointImages';
 
 const MarkerPopup = ({ isEdit }: { isEdit: boolean }) => {
   const [name, setName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
 
   useEffect(() => setName(mainStore.marker?.name || ''), []);
 
@@ -19,7 +20,8 @@ const MarkerPopup = ({ isEdit }: { isEdit: boolean }) => {
       mainStore.addMarker({
         id: mainStore.marker?.id || mainStore.markers.length + 1,
         name: name,
-        coordinates: mainStore.marker?.coordinates || [0, 0],
+        description: description,
+        coordinates: mainStore.marker?.coordinates || '0,0',
         imagesArray: mainStore.imagesArray,
       });
     clearStorages();
@@ -30,7 +32,8 @@ const MarkerPopup = ({ isEdit }: { isEdit: boolean }) => {
       mainStore.editMarker({
         id: mainStore.marker?.id || mainStore.markers.length + 1,
         name: name,
-        coordinates: mainStore.marker?.coordinates || [0, 0],
+        description: description,
+        coordinates: mainStore.marker?.coordinates || '0,0',
         imagesArray: mainStore.imagesArray,
       });
     clearStorages();
@@ -44,6 +47,11 @@ const MarkerPopup = ({ isEdit }: { isEdit: boolean }) => {
             X
           </a>
           <input value={name} onChange={(e) => setName(e.target.value)} className='popup-input' />
+          <input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className='popup-input'
+          />
           <br />
           <PointImages view={false} />
           <div className='popup-wrp'>

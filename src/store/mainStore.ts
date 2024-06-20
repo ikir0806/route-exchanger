@@ -1,4 +1,3 @@
-import { LngLat } from '@yandex/ymaps3-types';
 import { UploadFile } from 'antd';
 import { makeAutoObservable } from 'mobx';
 
@@ -14,7 +13,8 @@ interface Route {
 interface Marker {
   id: number;
   name: string;
-  coordinates: LngLat;
+  description: string;
+  coordinates: string;
   imagesArray: UploadFile[];
 }
 
@@ -47,7 +47,7 @@ class MainStore {
         {
           id: 1,
           name: 'Парк Горького',
-          coordinates: [37.59088439941408, 55.7208140653624],
+          coordinates: '37.59088439941408,55.7208140653624',
           imagesArray: [
             {
               uid: 'rc-upload-1712679953275-3',

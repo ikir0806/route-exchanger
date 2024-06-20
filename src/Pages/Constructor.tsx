@@ -1,6 +1,7 @@
 import { ConfigProvider, Input } from 'antd';
 import { useContext, useState } from 'react';
 import MapProvider from '../Features/Map/MapProvider';
+import * as Api from '../api';
 import mainStore from '../store/mainStore';
 import { AuthContext } from '../utils/AuthContext';
 
@@ -11,14 +12,25 @@ const Constructor = () => {
   const [description, setDescription] = useState<string>('');
 
   const saveRoute = () => {
-    console.log({
-      id: `${mainStore.routes.length + 1}`,
-      name: name,
-      location: location,
-      description: description,
-      markersArray: mainStore.markers,
-      author: user?.login,
-    });
+    if (!user) return;
+    Api.route
+      .create(
+        {
+          name: name,
+          location: location,
+          description: description,
+        },
+        user?.id,
+      )
+      .then((res) => Api.markers.createMany(mainStore.markers, res));
+    // console.log({
+    //   id: `${mainStore.routes.length + 1}`,
+    //   name: name,
+    //   location: location,
+    //   description: description,
+    //   markersArray: mainStore.markers,
+    //   author: user?.login,
+    // });
   };
 
   return (

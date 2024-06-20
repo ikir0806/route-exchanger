@@ -40,7 +40,12 @@ const MapProvider = () => {
               <YMapDefaultSchemeLayer customization={customization as VectorCustomization} />
               <YMapDefaultFeaturesLayer />
               {mainStore.marker && (
-                <YMapMarker zIndex={1000} coordinates={mainStore.marker.coordinates}>
+                <YMapMarker
+                  zIndex={1000}
+                  coordinates={[
+                    +mainStore.marker.coordinates.split(',')[0],
+                    +mainStore.marker.coordinates.split(',')[1],
+                  ]}>
                   <MarkerPopup isEdit={isEdit} />
                 </YMapMarker>
               )}
@@ -52,7 +57,10 @@ const MapProvider = () => {
                     marker && mainStore.setImagesArray(marker?.imagesArray);
                     marker && mainStore.setMarker(marker);
                   }}
-                  coordinates={marker.coordinates}>
+                  coordinates={[
+                    +marker.coordinates.split(',')[0],
+                    +marker.coordinates.split(',')[1],
+                  ]}>
                   <CustomMarker num={marker.id} />
                 </YMapMarker>
               ))}
@@ -60,11 +68,13 @@ const MapProvider = () => {
                 layer='any'
                 onDblClick={(_, e) => {
                   setIsEdit(false);
+                  console.log(e.coordinates.toString());
                   mainStore.setMarker({
                     id: mainStore.markers.length + 1,
                     imagesArray: [],
                     name: '',
-                    coordinates: e.coordinates,
+                    description: '',
+                    coordinates: e.coordinates.toString(),
                   });
                 }}
               />
