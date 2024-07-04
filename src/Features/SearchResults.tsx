@@ -42,7 +42,7 @@ const SearchResults: FC<SearchResultsProps> = ({ loading }) => {
             ))}
           </div>
         ) : (
-          <h2 className='roucardte-empty'>К сожалению, ничего не нашлось</h2>
+          <h2 className='card-empty'>К сожалению, ничего не нашлось</h2>
         )
       }
     </Observer>

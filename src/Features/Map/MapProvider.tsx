@@ -72,6 +72,7 @@ const MapProvider = () => {
                   mainStore.setMarker({
                     id: mainStore.markers.length + 1,
                     imagesArray: [],
+                    imagesOptionsArray: [],
                     name: '',
                     description: '',
                     coordinates: e.coordinates.toString(),

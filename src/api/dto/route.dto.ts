@@ -3,3 +3,5 @@ export interface CreateRouteDto {
   description: string;
   location: string;
 }
+
+export type GetRouteDto = CreateRouteDto & { id: number };

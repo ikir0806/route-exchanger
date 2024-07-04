@@ -23,6 +23,7 @@ const MarkerPopup = ({ isEdit }: { isEdit: boolean }) => {
         description: description,
         coordinates: mainStore.marker?.coordinates || '0,0',
         imagesArray: mainStore.imagesArray,
+        imagesOptionsArray: mainStore.imagesOptionsArray,
       });
     clearStorages();
   };
@@ -35,6 +36,7 @@ const MarkerPopup = ({ isEdit }: { isEdit: boolean }) => {
         description: description,
         coordinates: mainStore.marker?.coordinates || '0,0',
         imagesArray: mainStore.imagesArray,
+        imagesOptionsArray: mainStore.imagesOptionsArray,
       });
     clearStorages();
   };

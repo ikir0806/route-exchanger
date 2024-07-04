@@ -14,9 +14,15 @@ const PointImages = ({ view, imagesArray }: { view: boolean; imagesArray?: Uploa
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
       message.warning('Недопустимый формат файла');
-      return Upload.LIST_IGNORE;
     }
-    return false;
+    return isJpgOrPng || Upload.LIST_IGNORE;
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onUploadSuccess = async (options: any) => {
+    mainStore.setImagesOptionsArray(options);
+    const { onSuccess } = options;
+    onSuccess();
   };
 
   return (
@@ -31,6 +37,7 @@ const PointImages = ({ view, imagesArray }: { view: boolean; imagesArray?: Uploa
             },
           }}>
           <Upload
+            customRequest={onUploadSuccess}
             disabled={view}
             className='popup-images'
             beforeUpload={beforeUpload}

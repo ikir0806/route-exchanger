@@ -1,5 +1,6 @@
 import { ConfigProvider, Input } from 'antd';
 import { useContext, useState } from 'react';
+import { PuffLoader } from 'react-spinners';
 import MapProvider from '../Features/Map/MapProvider';
 import * as Api from '../api';
 import mainStore from '../store/mainStore';
@@ -10,9 +11,13 @@ const Constructor = () => {
   const [name, setName] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const saveRoute = () => {
     if (!user) return;
+
+    setLoading(true);
+
     Api.route
       .create(
         {
@@ -22,18 +27,35 @@ const Constructor = () => {
         },
         user?.id,
       )
-      .then((res) => Api.markers.createMany(mainStore.markers, res));
-    // console.log({
-    //   id: `${mainStore.routes.length + 1}`,
-    //   name: name,
-    //   location: location,
-    //   description: description,
-    //   markersArray: mainStore.markers,
-    //   author: user?.login,
-    // });
+      .then((res) => {
+        mainStore.markers.forEach(async (marker) => {
+          await Api.markers
+            .create(
+              {
+                name: marker.name,
+                description: marker.description,
+                coordinates: marker.coordinates,
+              },
+              res,
+            )
+            .then(async (res) => await Api.images.uploadFiles(res, marker.imagesOptionsArray));
+          setLoading(false);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
   };
 
-  return (
+  return loading ? (
+    <>
+      <div style={{ marginTop: '10vh' }} className='spinner'>
+        <PuffLoader color='#006d4e' />
+      </div>
+      <h3 className='spinner-text'>Сохранение маршрута...</h3>
+    </>
+  ) : (
     <div className='wrapper route'>
       <ConfigProvider
         theme={{

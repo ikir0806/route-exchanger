@@ -2,7 +2,7 @@ import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import SearchResults from '../Features/SearchResults';
-import mainStore from '../store/mainStore';
+import * as Api from '../api';
 
 const Main = () => {
   const [searchText, setSearchText] = useState<string>('');
@@ -10,10 +10,16 @@ const Main = () => {
 
   const loadResults = () => {
     setLoading(true);
-    setTimeout(() => {
-      mainStore.getResultsArray(searchText);
-      setLoading(false);
-    }, 1000);
+    Api.route
+      .findByLocation(searchText)
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
   };
 
   return (

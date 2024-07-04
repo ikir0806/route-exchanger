@@ -12,26 +12,29 @@ export const remove = (ids: number[]): Promise<void> => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const uploadFile = async (userId: number, options: any) => {
-  const { onSuccess, onError, file, onProgress } = options;
+export const uploadFiles = async (markerId: number, options: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  options.forEach(async (option: any) => {
+    const { onSuccess, onError, file, onProgress } = option;
 
-  const formData = new FormData();
-  formData.append('file', file);
+    const formData = new FormData();
+    formData.append('file', file);
 
-  const config = {
-    headers: { 'Content-Type': 'multipart/form-data' },
-    onProgress: (event: ProgressEvent) => {
-      onProgress({ percent: (event.loaded / event.total) * 100 });
-    },
-  };
+    const config = {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onProgress: (event: ProgressEvent) => {
+        onProgress({ percent: (event.loaded / event.total) * 100 });
+      },
+    };
 
-  try {
-    const { data } = await axios.post('images?userId=' + userId, formData, config);
+    try {
+      const { data } = await axios.post('images?markerId=' + markerId, formData, config);
 
-    onSuccess();
+      onSuccess();
 
-    return data;
-  } catch (err) {
-    onError({ err });
-  }
+      return data;
+    } catch (err) {
+      onError({ err });
+    }
+  });
 };
