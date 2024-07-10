@@ -45,9 +45,9 @@ const MarkerPopup = ({ isEdit }: { isEdit: boolean }) => {
     <Observer>
       {() => (
         <div id='popup' className='popup'>
-          <a onClick={() => mainStore.setMarker(null)} href='#' className='popup-closer'>
+          <button onClick={() => mainStore.setMarker(null)} className='popup-closer'>
             X
-          </a>
+          </button>
           <input value={name} onChange={(e) => setName(e.target.value)} className='popup-input' />
           <input
             value={description}

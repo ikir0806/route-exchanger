@@ -486,8 +486,12 @@ body::after {
   padding-top: 3px;
   float: right;
   width: 23px;
-  height: 20px;
+  height: 23px;
   text-align: center;
+  border: none;
+  background: transparent;
+  padding: 0;
+  line-height: normal;
 }
 
 .popup-closer:hover {
