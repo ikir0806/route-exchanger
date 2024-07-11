@@ -1,4 +1,4 @@
-import { LngLat, VectorCustomization } from '@yandex/ymaps3-types';
+import { LngLatBounds, VectorCustomization } from '@yandex/ymaps3-types';
 import { Observer } from 'mobx-react';
 import { useState } from 'react';
 import {
@@ -9,6 +9,7 @@ import {
   YMapDefaultSchemeLayer,
   YMapListener,
   YMapMarker,
+  YMapZoomControl,
 } from 'ymap3-components';
 import { customization } from '../../assets/customization';
 import { apiKey } from '../../assets/helper';
@@ -16,33 +17,14 @@ import mainStore from '../../store/mainStore';
 import CustomMarker from './CustomMarker';
 import MarkerPopup from './MarkerPopup';
 
-const MapProvider = () => {
+const MapProvider = ({
+  bounds,
+  setBounds,
+}: {
+  bounds: LngLatBounds;
+  setBounds: (bounds: LngLatBounds) => void;
+}) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [center, setCenter] = useState<LngLat>([37.95, 55.65]);
-
-  async function createMap() {
-    await ymaps3.ready;
-
-    const { YMap } = ymaps3;
-
-    const map = new YMap(document.querySelector('.map'), {
-      location: {
-        center: [37.95, 55.65],
-        zoom: 16,
-      },
-    });
-
-    console.log(map.zoom);
-
-    map.setLocation({ center: [0, 0], zoom: 5 });
-
-    // map.setLocation({
-    //   bounds: [
-    //     [37, 55],
-    //     [38, 55],
-    //   ],
-    // });
-  }
 
   return (
     <>
@@ -50,8 +32,11 @@ const MapProvider = () => {
         {() => (
           <YMapComponentsProvider apiKey={apiKey} lang='ru_RU'>
             <YMap
-              className='map'
-              location={{ center: center, zoom: 10 }}
+              zoomRounding='smooth'
+              location={{
+                bounds: bounds,
+                duration: 500,
+              }}
               behaviors={[
                 'drag',
                 'pinchZoom',
@@ -63,6 +48,7 @@ const MapProvider = () => {
                 'panTilt',
                 'pinchRotate',
               ]}>
+              <YMapZoomControl easing={'ease-in-out'} duration={2000} />
               <YMapDefaultSchemeLayer customization={customization as VectorCustomization} />
               <YMapDefaultFeaturesLayer />
               {mainStore.marker && (
@@ -77,6 +63,7 @@ const MapProvider = () => {
               )}
               {mainStore.markers?.map((marker) => (
                 <YMapMarker
+                  key={marker.id}
                   onClick={(e) => {
                     setIsEdit(true);
                     const marker = mainStore.getMarker(+(e.target as HTMLButtonElement).innerHTML);
@@ -92,10 +79,11 @@ const MapProvider = () => {
               ))}
               <YMapListener
                 layer='any'
-                onClick={() => createMap()}
                 onDblClick={(_, e) => {
-                  console.log(e.coordinates);
-                  setCenter(e.coordinates);
+                  setBounds([
+                    [e.coordinates[0] - 0.3, e.coordinates[1] + 0.3],
+                    [e.coordinates[0] + 0.3, e.coordinates[1] - 0.3],
+                  ]);
                   // setIsEdit(false);
                   mainStore.setMarker({
                     id: mainStore.markers.length + 1,

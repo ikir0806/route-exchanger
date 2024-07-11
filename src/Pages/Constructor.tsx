@@ -1,3 +1,4 @@
+import { LngLatBounds } from '@yandex/ymaps3-types';
 import { ConfigProvider, Input } from 'antd';
 import { useContext, useState } from 'react';
 import { PuffLoader } from 'react-spinners';
@@ -12,6 +13,10 @@ const Constructor = () => {
   const [location, setLocation] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [bounds, setBounds] = useState<LngLatBounds>([
+    [37, 55.75],
+    [38, 55.75],
+  ]);
 
   const saveRoute = () => {
     if (!user) return;
@@ -47,6 +52,38 @@ const Constructor = () => {
         setLoading(false);
       });
   };
+
+  function centerMap() {
+    const coords = mainStore.markers?.map((marker) => marker.coordinates.split(','));
+
+    // let sumX = 0;
+    // let sumY = 0;
+
+    // for (const coord of coords) {
+    //   sumX += +coord[0];
+    //   sumY += +coord[1];
+    // }
+
+    // const centerX = sumX / coords.length;
+    // const centerY = sumY / coords.length;
+
+    // setCenter([centerX, centerY]);
+
+    const bounds = coords.reduce(
+      (prev, curr) => [
+        Math.min(prev[0], +curr[0]),
+        Math.max(prev[1], +curr[0]),
+        Math.min(prev[2], +curr[1]),
+        Math.max(prev[3], +curr[1]),
+      ],
+      [Number.MAX_VALUE, Number.MIN_VALUE, Number.MAX_VALUE, Number.MIN_VALUE],
+    );
+
+    setBounds([
+      [bounds[0] - (bounds[1] - bounds[0]) * 0.05, bounds[3] + (bounds[3] - bounds[2]) * 0.05],
+      [bounds[1] + (bounds[1] - bounds[0]) * 0.05, bounds[2] - (bounds[3] - bounds[2]) * 0.05],
+    ]);
+  }
 
   return loading ? (
     <>
@@ -92,10 +129,12 @@ const Constructor = () => {
       </ConfigProvider>
 
       <div className='map-container'>
-        <MapProvider />
+        <MapProvider bounds={bounds} setBounds={setBounds} />
       </div>
       <div className='action-buttons-wrp'>
-        <button className='default-button action-buttons'>Выгрузить маршрут</button>
+        <button onClick={centerMap} className='default-button action-buttons'>
+          Выгрузить маршрут
+        </button>
         <button onClick={saveRoute} className='primary-button action-buttons'>
           Сохранить
         </button>
