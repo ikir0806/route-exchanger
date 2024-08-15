@@ -117,8 +117,9 @@ const Constructor = () => {
       });
     };
 
+    const vectorSource = new VectorSource();
     const vectorLayer = new Vector({
-      source: new VectorSource(),
+      source: vectorSource,
     });
 
     for (let i = 0; i < mainStore.markers.length; i++) {
@@ -143,6 +144,9 @@ const Constructor = () => {
     }
 
     mapRef.current?.addLayer(vectorLayer);
+
+    const extent = vectorSource.getExtent();
+    mapRef.current?.getView().fit(extent, { padding: [5, 5, 5, 5] });
 
     mapRef.current?.once('rendercomplete', function () {
       const mapCanvas = document.createElement('canvas');
