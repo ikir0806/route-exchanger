@@ -172,10 +172,30 @@ const Constructor = () => {
       );
       mapContext.globalAlpha = 1;
       mapContext?.setTransform(1, 0, 0, 1, 0, 0);
-      const link = document.createElement('a');
-      link.download = 'filename.png';
-      link.href = mapCanvas.toDataURL('image/jpeg');
-      link.click();
+
+      mapCanvas.toBlob(async (blob) => {
+        if (!blob || !user) {
+          return;
+        } else {
+          try {
+            Api.map.uploadFile(user.id, blob);
+
+            // const formData = new FormData();
+            // formData.append('file', blob, 'map-image.png');
+
+            // const response = await fetch('YOUR_SERVER_URL', {
+            //   method: 'POST',
+            //   body: formData,
+            // });
+
+            // if (!response.ok) {
+            //   throw new Error('Failed to upload image');
+            // }
+          } catch (error) {
+            console.error('Upload failed', error);
+          }
+        }
+      }, 'image/png');
     });
 
     const printSize = [width, height];
@@ -234,6 +254,7 @@ const Constructor = () => {
           },
         }}>
         <div className='route-wrp'>
+          <img src='' />
           <h3>Название маршрута</h3>
           <Input
             value={name}
