@@ -10,26 +10,22 @@ export const remove = (userId: number): Promise<void> => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const uploadFile = async (userId: number, blob: any) => {
-  // const { onSuccess, onError, file, onProgress } = options;
-  console.log(blob);
+export const uploadFile = async (routeId: number, file: File) => {
+  // Создаём FormData и добавляем файл
   const formData = new FormData();
-  formData.append('file', blob);
+  formData.append('file', file);
 
+  // Конфигурация для axios запроса
   const config = {
     headers: { 'Content-Type': 'multipart/form-data' },
-    // onProgress: (event: ProgressEvent) => {
-    //   onProgress({ percent: (event.loaded / event.total) * 100 });
-    // },
   };
 
   try {
-    const { data } = await axios.post('maps?userId=' + userId, formData, config);
-
-    // onSuccess();
+    const { data } = await axios.post(`maps?routeId=${routeId}`, formData, config);
 
     return data;
   } catch (err) {
-    // onError({ err });
+    console.error('Upload failed', err);
+    throw err;
   }
 };

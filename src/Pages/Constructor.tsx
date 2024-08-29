@@ -71,8 +71,9 @@ const Constructor = () => {
         },
         user?.id,
       )
-      .then((res) => {
+      .then((routeId) => {
         mainStore.markers.forEach(async (marker) => {
+          await getImage(routeId);
           await Api.markers
             .create(
               {
@@ -80,7 +81,7 @@ const Constructor = () => {
                 description: marker.description,
                 coordinates: marker.coordinates,
               },
-              res,
+              routeId,
             )
             .then(async (res) => await Api.images.uploadFiles(res, marker.imagesOptionsArray));
           setLoading(false);
@@ -92,12 +93,12 @@ const Constructor = () => {
       });
   };
 
-  async function getImage() {
+  async function getImage(routeId: number | null) {
     const width = 1200;
     const height = 600;
     const viewResolution = mapRef.current?.getView().getResolution();
 
-    const getIconStyle = (id: number) => {
+    const getIconStyle = (id?: number) => {
       return new Style({
         image: new CircleStyle({
           radius: 10,
@@ -148,7 +149,7 @@ const Constructor = () => {
     const extent = vectorSource.getExtent();
     mapRef.current?.getView().fit(extent, { padding: [5, 5, 5, 5] });
 
-    mapRef.current?.once('rendercomplete', function () {
+    mapRef.current?.once('rendercomplete', async function () {
       const mapCanvas = document.createElement('canvas');
       mapCanvas.width = width;
       mapCanvas.height = height;
@@ -173,27 +174,28 @@ const Constructor = () => {
       mapContext.globalAlpha = 1;
       mapContext?.setTransform(1, 0, 0, 1, 0, 0);
 
+      if (!routeId) {
+        const link = document.createElement('a');
+        link.download = 'filename.png';
+        link.href = mapCanvas.toDataURL('image/jpeg');
+        link.click();
+        return;
+      }
+
+      // Создаём файл из blob
       mapCanvas.toBlob(async (blob) => {
         if (!blob || !user) {
           return;
-        } else {
-          try {
-            Api.map.uploadFile(user.id, blob);
+        }
 
-            // const formData = new FormData();
-            // formData.append('file', blob, 'map-image.png');
+        // Создаём объект File из blob
+        const file = new File([blob], 'map-image.png', { type: 'image/png' });
 
-            // const response = await fetch('YOUR_SERVER_URL', {
-            //   method: 'POST',
-            //   body: formData,
-            // });
-
-            // if (!response.ok) {
-            //   throw new Error('Failed to upload image');
-            // }
-          } catch (error) {
-            console.error('Upload failed', error);
-          }
+        try {
+          // Отправляем файл на сервер
+          await Api.map.uploadFile(routeId, file);
+        } catch (error) {
+          console.error('Upload failed', error);
         }
       }, 'image/png');
     });
@@ -284,7 +286,10 @@ const Constructor = () => {
         <MapProvider bounds={bounds} setBounds={setBounds} />
       </div>
       <div className='action-buttons-wrp'>
-        <button onClick={getImage} className='default-button action-buttons'>
+        <button onClick={centerMap} className='default-button action-buttons'>
+          Центрировать карту
+        </button>
+        <button onClick={() => getImage(null)} className='default-button action-buttons'>
           Выгрузить маршрут
         </button>
         <button onClick={saveRoute} className='primary-button action-buttons'>
