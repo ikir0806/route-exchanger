@@ -71,9 +71,8 @@ const Constructor = () => {
         },
         user?.id,
       )
-      .then((routeId) => {
+      .then(async (routeId) => {
         mainStore.markers.forEach(async (marker) => {
-          await getImage(routeId);
           await Api.markers
             .create(
               {
@@ -84,8 +83,9 @@ const Constructor = () => {
               routeId,
             )
             .then(async (res) => await Api.images.uploadFiles(res, marker.imagesOptionsArray));
-          setLoading(false);
         });
+        await getImage(routeId);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
@@ -182,17 +182,13 @@ const Constructor = () => {
         return;
       }
 
-      // Создаём файл из blob
       mapCanvas.toBlob(async (blob) => {
         if (!blob || !user) {
           return;
         }
-
-        // Создаём объект File из blob
         const file = new File([blob], 'map-image.png', { type: 'image/png' });
 
         try {
-          // Отправляем файл на сервер
           await Api.map.uploadFile(routeId, file);
         } catch (error) {
           console.error('Upload failed', error);
@@ -238,14 +234,7 @@ const Constructor = () => {
     ]);
   }
 
-  return loading ? (
-    <>
-      <div style={{ marginTop: '10vh' }} className='spinner'>
-        <PuffLoader color='#006d4e' />
-      </div>
-      <h3 className='spinner-text'>Сохранение маршрута...</h3>
-    </>
-  ) : (
+  return (
     <div className='wrapper route'>
       <ConfigProvider
         theme={{
@@ -297,6 +286,14 @@ const Constructor = () => {
         </button>
       </div>
       <div id='map' className='map'></div>
+      {loading && (
+        <div className='loader'>
+          <div style={{ marginTop: '10vh' }} className='spinner'>
+            <PuffLoader color='#006d4e' />
+          </div>
+          <h3 className='spinner-text white-text'>Сохранение маршрута...</h3>
+        </div>
+      )}
     </div>
   );
 };
