@@ -4,4 +4,4 @@ export interface CreateRouteDto {
   location: string;
 }
 
-export type GetRouteDto = CreateRouteDto & { id: number };
+export type GetRouteDto = CreateRouteDto & { id: number; author: string };

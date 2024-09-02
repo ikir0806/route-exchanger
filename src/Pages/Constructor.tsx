@@ -11,6 +11,7 @@ import { OSM, Vector as VectorSource } from 'ol/source.js';
 import { Fill, Stroke, Style, Text } from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 import { useContext, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PuffLoader } from 'react-spinners';
 import MapProvider from '../Features/Map/MapProvider';
 import * as Api from '../api';
@@ -18,6 +19,7 @@ import mainStore from '../store/mainStore';
 import { AuthContext } from '../utils/AuthContext';
 
 const Constructor = () => {
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const [name, setName] = useState<string>('');
   const [location, setLocation] = useState<string>('');
@@ -86,6 +88,7 @@ const Constructor = () => {
         });
         await getImage(routeId);
         setLoading(false);
+        navigate('/');
       })
       .catch((error) => {
         console.log(error);

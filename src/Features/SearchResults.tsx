@@ -30,13 +30,15 @@ const SearchResults: FC<SearchResultsProps> = ({ loading }) => {
                 <img src='./moscow.png' className='card-img' />
                 <div className='card-info'>
                   <h2>{result.name}</h2>
-                  <p>{result.place}</p>
-                  <PointImages
-                    view
-                    imagesArray={Array.prototype.concat(
-                      ...result.markersArray.map((marker) => marker.imagesArray),
-                    )}
-                  />
+                  <p>{result.location}</p>
+                  {result.markersArray && (
+                    <PointImages
+                      view
+                      imagesArray={Array.prototype.concat(
+                        ...result.markersArray.map((marker) => marker.imagesArray),
+                      )}
+                    />
+                  )}
                 </div>
               </Link>
             ))}

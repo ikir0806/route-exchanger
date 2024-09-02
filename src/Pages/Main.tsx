@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import SearchResults from '../Features/SearchResults';
 import * as Api from '../api';
+import mainStore from '../store/mainStore';
 
 const Main = () => {
   const [searchText, setSearchText] = useState<string>('');
@@ -13,7 +14,7 @@ const Main = () => {
     Api.route
       .findByLocation(searchText)
       .then((res) => {
-        console.log(res);
+        mainStore.setResultsArray(res);
         setLoading(false);
       })
       .catch((error) => {

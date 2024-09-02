@@ -7,10 +7,14 @@ const MarkerPopup = ({ isEdit }: { isEdit: boolean }) => {
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
 
-  useEffect(() => setName(mainStore.marker?.name || ''), []);
+  useEffect(() => {
+    setName(mainStore.marker?.name || '');
+    setDescription(mainStore.marker?.description || '');
+  }, []);
 
   const clearStorages = () => {
     setName('');
+    setDescription('');
     mainStore.setImagesArray([]);
     mainStore.setMarker(null);
   };

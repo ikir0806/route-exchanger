@@ -2,12 +2,12 @@ import { UploadFile } from 'antd';
 import { makeAutoObservable } from 'mobx';
 
 interface Route {
-  id: string;
+  id: number;
   author: string;
-  place: string;
+  location: string;
   name: string;
   description: string;
-  markersArray: Marker[];
+  markersArray?: Marker[];
 }
 
 interface Marker {
@@ -63,7 +63,7 @@ class MainStore {
     this.resultsArray = this.routes?.filter(
       (route) =>
         route.name.toLowerCase().includes(filter.toLowerCase()) ||
-        route.place.toLowerCase().includes(filter.toLowerCase()),
+        route.location.toLowerCase().includes(filter.toLowerCase()),
     );
   }
 
@@ -102,9 +102,13 @@ class MainStore {
     this.routes.push(route);
   }
 
-  getRoute(id: string) {
+  getRoute(id: number) {
     this.route = this.routes.find((route) => route.id === id) || null;
     this.markers = this.route?.markersArray || [];
+  }
+
+  setRoutesArray(routesArray: Route[]) {
+    this.routes = routesArray;
   }
 
   afterSaving() {
