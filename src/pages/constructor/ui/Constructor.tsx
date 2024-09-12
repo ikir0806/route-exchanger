@@ -1,22 +1,18 @@
 import { AuthContext } from '@app/providers/AuthContext';
 import MapProvider from '@app/providers/MapProvider';
 import mainStore from '@app/store/mainStore';
-import { image, map, marker, route } from '@entities';
+import { image, marker, route } from '@entities';
 import { LngLatBounds } from '@yandex/ymaps3-types';
 import { ConfigProvider, Input } from 'antd';
-import { Feature } from 'ol';
 import apply from 'ol-mapbox-style';
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
-import { Point } from 'ol/geom';
-import { Tile as TileLayer, Vector, Vector as VectorLayer } from 'ol/layer.js';
-import { fromLonLat } from 'ol/proj';
+import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer.js';
 import { OSM, Vector as VectorSource } from 'ol/source.js';
-import { Fill, Stroke, Style, Text } from 'ol/style';
-import CircleStyle from 'ol/style/Circle';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PuffLoader } from 'react-spinners';
+import { ImageCreator } from '../lib/ImageCreator';
 
 export const Constructor: FC = () => {
   const navigate = useNavigate();
@@ -86,7 +82,7 @@ export const Constructor: FC = () => {
             )
             .then(async (res) => await image.uploadFiles(res, resultMarker.imagesOptionsArray));
         });
-        await getImage(routeId);
+        await ImageCreator.createImage(routeId, mapRef.current, user);
         setLoading(false);
         navigate('/');
       })
@@ -95,115 +91,6 @@ export const Constructor: FC = () => {
         setLoading(false);
       });
   };
-
-  async function getImage(routeId: number | null) {
-    const width = 1200;
-    const height = 600;
-    const viewResolution = mapRef.current?.getView().getResolution();
-
-    const getIconStyle = (id?: number) => {
-      return new Style({
-        image: new CircleStyle({
-          radius: 10,
-          stroke: new Stroke({ color: '#21605e', width: 2 }),
-          fill: new Fill({ color: 'transparent' }),
-        }),
-        zIndex: 1000,
-        fill: new Fill({ color: 'transparent' }),
-        text: new Text({
-          text: `${id}`,
-          font: 'Normal 15px Raleway',
-          fill: new Fill({ color: '#071111' }),
-          stroke: new Stroke({ color: '#071111', width: 1 }),
-          offsetY: -1,
-          offsetX: 0.3,
-        }),
-      });
-    };
-
-    const vectorSource = new VectorSource();
-    const vectorLayer = new Vector({
-      source: vectorSource,
-    });
-
-    for (let i = 0; i < mainStore.markers.length; i++) {
-      vectorLayer
-        ?.getSource()
-        ?.addFeature(
-          createMarker(
-            mainStore.markers[i].coordinates.split(',')?.[0],
-            mainStore.markers[i].coordinates.split(',')?.[1],
-            mainStore.markers[i].id,
-          ),
-        );
-    }
-
-    function createMarker(lng: string, lat: string, id: number) {
-      const iconFeature = new Feature({
-        geometry: new Point(fromLonLat([parseFloat(lng), parseFloat(lat)])),
-        id: id,
-      });
-      iconFeature.setStyle(getIconStyle(id));
-      return iconFeature;
-    }
-
-    mapRef.current?.addLayer(vectorLayer);
-
-    const extent = vectorSource.getExtent();
-    mapRef.current?.getView().fit(extent, { padding: [5, 5, 5, 5] });
-
-    mapRef.current?.once('rendercomplete', async function () {
-      const mapCanvas = document.createElement('canvas');
-      mapCanvas.width = width;
-      mapCanvas.height = height;
-      const mapContext = mapCanvas.getContext('2d');
-      if (!mapContext) return;
-      Array.prototype.forEach.call(
-        document.querySelectorAll('.ol-layer canvas'),
-        function (canvas) {
-          if (canvas.width > 0) {
-            const opacity = canvas.parentNode.style.opacity;
-            mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
-            const transform = canvas.style.transform;
-            const matrix = transform
-              .match(/^matrix\(([^(]*)\)$/)[1]
-              .split(',')
-              .map(Number);
-            CanvasRenderingContext2D.prototype.setTransform.apply(mapContext, matrix);
-            mapContext?.drawImage(canvas, 0, 0);
-          }
-        },
-      );
-      mapContext.globalAlpha = 1;
-      mapContext?.setTransform(1, 0, 0, 1, 0, 0);
-
-      if (!routeId) {
-        const link = document.createElement('a');
-        link.download = 'filename.png';
-        link.href = mapCanvas.toDataURL('image/jpeg');
-        link.click();
-        return;
-      }
-
-      mapCanvas.toBlob(async (blob) => {
-        if (!blob || !user) {
-          return;
-        }
-        const file = new File([blob], 'map-image.png', { type: 'image/png' });
-
-        try {
-          await map.uploadFile(routeId, file);
-        } catch (error) {
-          console.error('Upload failed', error);
-        }
-      }, 'image/png');
-    });
-
-    const printSize = [width, height];
-    mapRef.current?.setSize(printSize);
-    const scaling = Math.min(width / 1200, height / 600);
-    viewResolution && mapRef.current?.getView().setResolution(viewResolution / scaling);
-  }
 
   function centerMap() {
     const coords = mainStore.markers?.map((marker) => marker.coordinates.split(','));
@@ -281,7 +168,9 @@ export const Constructor: FC = () => {
         <button onClick={centerMap} className='default-button action-buttons'>
           Центрировать карту
         </button>
-        <button onClick={() => getImage(null)} className='default-button action-buttons'>
+        <button
+          onClick={() => user && ImageCreator.createImage(null, mapRef.current, user)}
+          className='default-button action-buttons'>
           Выгрузить маршрут
         </button>
         <button onClick={saveRoute} className='primary-button action-buttons'>
