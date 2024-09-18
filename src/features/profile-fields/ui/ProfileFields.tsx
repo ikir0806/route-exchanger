@@ -1,5 +1,5 @@
 import { AuthContext } from '@app/providers/AuthContext';
-import { user as userEntity } from '@entities';
+import { useUpdateUserMutation } from '@entities';
 import { AuthChecker } from '@shared/lib/auth-checker/auth-checker';
 import { ConfigProvider, Input } from 'antd';
 import { FC, useContext, useState } from 'react';
@@ -10,20 +10,20 @@ export const ProfileFields: FC = () => {
   const [login, setLogin] = useState<string | undefined>(user?.login);
   const [description, setDescription] = useState<string | undefined>(user?.description);
 
+  const [updateUser] = useUpdateUserMutation();
+
   const onSave = () => {
     if (!user) return;
 
-    userEntity
-      .update({
-        id: user.id,
-        login: login || user.login,
-        description: description || user?.description || '',
-      })
-      .then(() => {
-        AuthChecker.checkAuth()
-          .then((data) => data && setUser(data))
-          .catch((e) => console.error(e));
-      });
+    updateUser({
+      id: user.id,
+      login: login || user.login,
+      description: description || user?.description || '',
+    }).then(() => {
+      AuthChecker.checkAuth()
+        .then((data) => data && setUser(data))
+        .catch((e) => console.error(e));
+    });
   };
 
   return (

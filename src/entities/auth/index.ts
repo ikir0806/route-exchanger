@@ -1,4 +1,11 @@
-export * as auth from './api/auth';
+export {
+  authApi,
+  getMe,
+  useGetMeQuery,
+  useLogOutMutation,
+  useLoginMutation,
+  useRegisterMutation,
+} from './api/auth';
 export type {
   LoginFormDto,
   LoginResponseDto,

@@ -1,15 +1,26 @@
-import mainStore from '@app/store/mainStore';
-import type { GetProp, UploadProps } from 'antd';
+import { useAppDispatch } from '@app/store/hooks/redux';
+import { setImagesOptions } from '@entities';
+import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { ConfigProvider, Upload, message } from 'antd';
 import { Observer } from 'mobx-react';
-import { FC } from 'react';
-import { IPointImages } from '../model/point-images.model';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
-export const PointImages: FC<IPointImages> = ({ view, imagesArray }) => {
+export const PointImages = ({
+  view,
+  imagesProp,
+  fileList,
+  setFileList,
+}: {
+  view: boolean;
+  imagesProp?: UploadFile[];
+  fileList?: UploadFile[];
+  setFileList?: (filesList: UploadFile[]) => void;
+}) => {
+  const dispatch = useAppDispatch();
+
   const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    mainStore.setImagesArray(newFileList);
+    setFileList && setFileList(newFileList);
   };
 
   const beforeUpload = (file: FileType) => {
@@ -22,7 +33,7 @@ export const PointImages: FC<IPointImages> = ({ view, imagesArray }) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onUploadSuccess = async (options: any) => {
-    mainStore.setImagesOptionsArray(options);
+    dispatch(setImagesOptions(options));
     const { onSuccess } = options;
     onSuccess();
   };
@@ -45,8 +56,8 @@ export const PointImages: FC<IPointImages> = ({ view, imagesArray }) => {
             beforeUpload={beforeUpload}
             onChange={onChange}
             listType='picture-card'
-            fileList={view ? imagesArray : mainStore.imagesArray}>
-            {!view && mainStore.imagesArray?.length < 8 && '+ Прикрепить'}
+            fileList={view ? imagesProp : fileList}>
+            {!view && fileList && fileList?.length < 8 && '+ Прикрепить'}
           </Upload>
         </ConfigProvider>
       )}

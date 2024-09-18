@@ -1,7 +1,11 @@
 import { AuthContext } from '@app/providers/AuthContext';
 import MapProvider from '@app/providers/MapProvider';
-import mainStore from '@app/store/mainStore';
-import { image, marker, route } from '@entities';
+import { useAppSelector } from '@app/store/hooks/redux';
+import {
+  useCreateMarkerMutation,
+  useCreateRouteMutation,
+  useUploadImagesMutation,
+} from '@entities';
 import { LngLatBounds } from '@yandex/ymaps3-types';
 import { ConfigProvider, Input } from 'antd';
 import apply from 'ol-mapbox-style';
@@ -27,8 +31,14 @@ export const Constructor: FC = () => {
   ]);
   const mapRef = useRef<Map | null>(null);
 
+  const [createRoute] = useCreateRouteMutation();
+  const [createMarker] = useCreateMarkerMutation();
+  const [uploadImages] = useUploadImagesMutation();
+
   const myAPIKey = 'd7aaaf2a98e54f60bf270cf3b1836e4c';
   const mapStyle = 'https://maps.geoapify.com/v1/styles/positron/style.json';
+
+  const { markers } = useAppSelector((state) => state.marker);
 
   useEffect(() => {
     const raster = new TileLayer({
@@ -60,29 +70,35 @@ export const Constructor: FC = () => {
 
     setLoading(true);
 
-    route
-      .create(
-        {
-          name: name,
-          location: location,
-          description: description,
-        },
-        user?.id,
-      )
+    createRoute({
+      values: {
+        name: name,
+        location: location,
+        description: description,
+      },
+      userId: user.id,
+    })
       .then(async (routeId) => {
-        mainStore.markers.forEach(async (resultMarker) => {
-          await marker
-            .create(
-              {
+        routeId.data &&
+          markers.forEach(async (resultMarker) => {
+            await createMarker({
+              value: {
                 name: resultMarker.name,
                 description: resultMarker.description,
                 coordinates: resultMarker.coordinates,
               },
-              routeId,
-            )
-            .then(async (res) => await image.uploadFiles(res, resultMarker.imagesOptionsArray));
-        });
-        await ImageCreator.createImage(routeId, mapRef.current, user);
+              routeId: routeId.data,
+            }).then(
+              async (res) =>
+                res.data &&
+                (await uploadImages({
+                  markerId: res.data,
+                  options: resultMarker.imagesOptions,
+                })),
+            );
+          });
+        routeId.data &&
+          (await ImageCreator.createImage(routeId.data, mapRef.current, user, markers));
         setLoading(false);
         navigate('/');
       })
@@ -93,7 +109,7 @@ export const Constructor: FC = () => {
   };
 
   function centerMap() {
-    const coords = mainStore.markers?.map((marker) => marker.coordinates.split(','));
+    const coords = markers?.map((marker) => marker.coordinates.split(','));
 
     // let sumX = 0;
     // let sumY = 0;
@@ -169,7 +185,7 @@ export const Constructor: FC = () => {
           Центрировать карту
         </button>
         <button
-          onClick={() => user && ImageCreator.createImage(null, mapRef.current, user)}
+          onClick={() => user && ImageCreator.createImage(null, mapRef.current, user, markers)}
           className='default-button action-buttons'>
           Выгрузить маршрут
         </button>

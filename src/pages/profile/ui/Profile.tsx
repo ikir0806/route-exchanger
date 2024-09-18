@@ -1,14 +1,19 @@
-import { ProfileAvatar, ProfileFields, ProfileRouter } from '@features';
-import { FC } from 'react';
+import { AuthContext } from '@app/providers/AuthContext';
+import { ProfileAvatar, ProfileFields, ProfileRoutes } from '@features';
+import { FC, useContext } from 'react';
 
 export const Profile: FC = () => {
-  return (
+  const { user } = useContext(AuthContext);
+
+  return user ? (
     <div className='wrapper profile'>
       <div className='profile-wrp'>
-        <ProfileAvatar />
+        <ProfileAvatar user={user} />
         <ProfileFields />
       </div>
-      <ProfileRouter />
+      <ProfileRoutes user={user} />
     </div>
+  ) : (
+    <></>
   );
 };

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { PuffLoader } from 'react-spinners';
 
 import { AuthContext } from '@app/providers/AuthContext';
-import { auth } from '@entities';
+import { useLoginMutation } from '@entities';
 import { AuthChecker } from '@shared/lib/auth-checker/auth-checker';
 import axios from 'axios';
 import { setCookie } from 'nookies';
@@ -13,6 +13,7 @@ export const Authorization: FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [login] = useLoginMutation();
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     setLoading(true);
@@ -28,11 +29,11 @@ export const Authorization: FC = () => {
     };
 
     try {
-      const { token } = await auth.login(fields);
-      setCookie(null, '_token', token, {
+      const { data } = await login(fields);
+      setCookie(null, '_token', data.token, {
         path: '/',
       });
-      localStorage.setItem('userToken', token);
+      localStorage.setItem('userToken', data.token);
 
       AuthChecker.checkAuth()
         .then((data) => data && setUser(data))

@@ -1,4 +1,4 @@
-import { auth } from '@entities';
+import { getMe } from '@entities';
 import axios from 'axios';
 
 export class AuthChecker {
@@ -9,7 +9,7 @@ export class AuthChecker {
       axios.defaults.headers.Authorization = 'Bearer ' + _token;
 
       try {
-        const user = await auth.getMe();
+        const user = await getMe();
         return user;
       } catch (e) {
         console.log(e);

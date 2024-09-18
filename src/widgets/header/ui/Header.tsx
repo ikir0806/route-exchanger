@@ -1,5 +1,5 @@
 import { AuthContext } from '@app/providers/AuthContext';
-import { auth } from '@entities';
+import { useLogOutMutation } from '@entities';
 import { faMap } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC, useContext, useState } from 'react';
@@ -10,6 +10,8 @@ export const Header: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const dialogRef = React.createRef<HTMLDialogElement>();
 
+  const [logOut] = useLogOutMutation();
+
   return (
     <div className='header'>
       <Link className='icon' to='/'>
@@ -18,7 +20,7 @@ export const Header: FC = () => {
       </Link>
       <div className='header-wrp'>
         <Link className='header-item' to='/profile'>
-          <h3 onMouseEnter={() => console.log(user)} /* className='white-text' */>Язык</h3>
+          <h3 /* className='white-text' */>Язык</h3>
           {/* <FontAwesomeIcon icon={faUser} className='profile-img' /> */}
         </Link>
         {!user && (
@@ -58,7 +60,7 @@ export const Header: FC = () => {
                   className='modal-profile-logout'
                   onClick={() => {
                     setUser && setUser(null);
-                    auth.logOut();
+                    logOut(null);
                     localStorage.removeItem('userToken');
                   }}>
                   Выйти

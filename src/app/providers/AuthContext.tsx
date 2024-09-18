@@ -6,7 +6,7 @@ type Props = {
   children?: ReactNode;
 };
 
-type IAuthContext = {
+type AuthContext = {
   user: UserFormDto | null;
   setUser: (newState: UserFormDto | null) => void;
 };
@@ -16,7 +16,7 @@ const initialValue = {
   setUser: () => {},
 };
 
-const AuthContext = createContext<IAuthContext>(initialValue);
+const AuthContext = createContext<AuthContext>(initialValue);
 
 const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<UserFormDto | null>(null);

@@ -3,16 +3,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { PuffLoader } from 'react-spinners';
 
 import { AuthContext } from '@app/providers/AuthContext';
-import { auth } from '@entities';
+import { useRegisterMutation } from '@entities';
 import { AuthChecker } from '@shared/lib';
 import axios from 'axios';
 import { setCookie } from 'nookies';
-import { IErrors } from '../model/errors.model';
-import { IFields } from '../model/fields.model';
+import { Errors } from '../model/errors.model';
+import { Fields } from '../model/fields.model';
 
 export const Registration: FC = () => {
   const { setUser } = useContext(AuthContext);
-  const [errors, setErrors] = useState<IErrors>({
+  const [errors, setErrors] = useState<Errors>({
     invalidEmail: false,
     invalidLogin: false,
     invalidPassword: false,
@@ -21,10 +21,12 @@ export const Registration: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [register] = useRegisterMutation();
+
   const navigate = useNavigate();
 
-  const handleValidation = async (fields: IFields) => {
-    const tempErrors: IErrors = {
+  const handleValidation = async (fields: Fields) => {
+    const tempErrors: Errors = {
       invalidEmail: fields.email.length < 6 ? true : false,
       invalidLogin: fields.login.length < 6 ? true : false,
       invalidPassword: fields.password.length < 6 ? true : false,
@@ -32,13 +34,13 @@ export const Registration: FC = () => {
     };
     if (!Object.values(tempErrors).some((error) => error)) {
       try {
-        const { token } = await auth.register(fields);
+        const { data } = await register(fields);
 
-        setCookie(null, '_token', token, {
+        setCookie(null, '_token', data.token, {
           path: '/',
         });
 
-        localStorage.setItem('userToken', token);
+        localStorage.setItem('userToken', data.token);
         AuthChecker.checkAuth()
           .then((data) => data && setUser(data))
           .catch((e) => console.error(e));
@@ -85,7 +87,7 @@ export const Registration: FC = () => {
     handleValidation(fields);
   };
 
-  const clearError = (errorField: keyof IErrors) =>
+  const clearError = (errorField: keyof Errors) =>
     errors[errorField] &&
     setErrors({
       ...errors,

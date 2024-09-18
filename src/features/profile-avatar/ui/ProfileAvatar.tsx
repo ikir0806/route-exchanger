@@ -1,12 +1,14 @@
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import type { GetProp, UploadProps } from 'antd';
-import { ConfigProvider, Upload, message } from 'antd';
-import { Observer } from 'mobx-react';
-import { FC, useContext, useEffect, useState } from 'react';
-
-import { AuthContext } from '@app/providers/AuthContext';
-import { avatar } from '@entities';
+import {
+  useGetAvatarQuery,
+  useRemoveAvatarMutation,
+  UserFormDto,
+  useUploadAvatarMutation,
+} from '@entities';
 import { ImageChecker } from '@shared/lib/image-checker/image-checker';
+import type { GetProp, UploadProps } from 'antd';
+import { ConfigProvider, message, Upload } from 'antd';
+import { useEffect, useState } from 'react';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -16,22 +18,24 @@ const getBase64 = (img: FileType, callback: (url: string) => void) => {
   reader.readAsDataURL(img);
 };
 
-export const ProfileAvatar: FC = () => {
+export const ProfileAvatar = ({ user }: { user: UserFormDto }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string>('');
-  const { user } = useContext(AuthContext);
+
+  const [uploadAvatar] = useUploadAvatarMutation();
+  const [removeAvatar] = useRemoveAvatarMutation();
+  const { data, isLoading, isError, refetch } = useGetAvatarQuery(user.id);
 
   useEffect(() => {
-    if (!user) return;
-    avatar.get(user.id).then((res) => {
-      const ext = res?.filename.split('.').pop();
-      const imageUrl =
+    if (!isLoading && !isError && data) {
+      const ext = data.filename.split('.').pop();
+      setImageUrl(
         ext && ImageChecker.isImage(ext)
-          ? 'http://localhost:7777/uploads/avatars/' + res?.filename
-          : '';
-      return setImageUrl(imageUrl);
-    });
-  }, []);
+          ? 'http://localhost:7777/uploads/avatars/' + data.filename
+          : '',
+      );
+    }
+  }, [isLoading, isError, data]);
 
   const handleChange: UploadProps['onChange'] = (info) => {
     if (info.file.status === 'uploading') {
@@ -39,7 +43,6 @@ export const ProfileAvatar: FC = () => {
       return;
     }
     if (info.file.status === 'done') {
-      console.log(info.file);
       getBase64(info.file.originFileObj as FileType, (url) => {
         setLoading(false);
         setImageUrl(url);
@@ -62,12 +65,12 @@ export const ProfileAvatar: FC = () => {
 
     try {
       if (imageUrl) {
-        await avatar.remove(user.id).then(async () => await avatar.uploadFile(user.id, options));
+        await removeAvatar(user.id).then(
+          async () => await uploadAvatar({ userId: user.id, options }).then(() => refetch()),
+        );
       } else {
-        await avatar.uploadFile(user.id, options);
+        await uploadAvatar({ userId: user.id, options }).then(() => refetch());
       }
-
-      // window.location.reload();
     } catch (e) {
       console.log(e);
     }
@@ -95,40 +98,36 @@ export const ProfileAvatar: FC = () => {
   );
 
   return (
-    <Observer>
-      {() => (
-        <ConfigProvider
-          theme={{
-            token: {
-              colorPrimary: '#21605e',
-              borderRadius: 20,
-              colorBgContainer: '#f2f3f0',
-            },
-          }}>
-          <Upload
-            customRequest={onUploadSuccess}
-            showUploadList={false}
-            accept='.png, .jpg'
-            className='avatar'
-            beforeUpload={beforeUpload}
-            onChange={handleChange}
-            listType='picture-card'>
-            {imageUrl ? (
-              <img
-                src={imageUrl}
-                alt='avatar'
-                style={{
-                  width: '100%',
-                  maxWidth: '50vw',
-                  maxHeight: '50vh',
-                }}
-              />
-            ) : (
-              uploadButton
-            )}
-          </Upload>
-        </ConfigProvider>
-      )}
-    </Observer>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#21605e',
+          borderRadius: 20,
+          colorBgContainer: '#f2f3f0',
+        },
+      }}>
+      <Upload
+        customRequest={onUploadSuccess}
+        showUploadList={false}
+        accept='.png, .jpg'
+        className='avatar'
+        beforeUpload={beforeUpload}
+        onChange={handleChange}
+        listType='picture-card'>
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt='avatar'
+            style={{
+              width: '100%',
+              maxWidth: '50vw',
+              maxHeight: '50vh',
+            }}
+          />
+        ) : (
+          uploadButton
+        )}
+      </Upload>
+    </ConfigProvider>
   );
 };

@@ -1,11 +1,12 @@
 import { AuthContext } from '@app/providers/AuthContext';
 import MapProvider from '@app/providers/MapProvider';
-import mainStore from '@app/store/mainStore';
+import { useAppSelector } from '@app/store/hooks/redux';
 import { ConfigProvider } from 'antd';
 import { FC, useContext } from 'react';
 
 export const View: FC = () => {
   const { user } = useContext(AuthContext);
+  const { currentRoute } = useAppSelector((state) => state.route);
 
   return (
     <div className='wrapper route'>
@@ -18,10 +19,10 @@ export const View: FC = () => {
           },
         }}>
         <div className='route-wrp'>
-          <h1>{mainStore.route?.name}</h1>
+          <h1>{currentRoute?.name}</h1>
           <h3 className='route-author'>{user?.login}</h3>
-          <h3>{mainStore.route?.location}</h3>
-          <h3 className='route-descr'>{mainStore.route?.description}</h3>
+          <h3>{currentRoute?.location}</h3>
+          <h3 className='route-descr'>{currentRoute?.description}</h3>
         </div>
       </ConfigProvider>
 
