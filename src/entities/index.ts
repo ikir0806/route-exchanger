@@ -29,14 +29,7 @@ export {
 export { resultReducer, setResults } from './result';
 export { addRoute, routeReducer, selectRouteById, setCurrentRoute, setRoutes } from './route';
 
-export {
-  authApi,
-  getMe,
-  useGetMeQuery,
-  useLogOutMutation,
-  useLoginMutation,
-  useRegisterMutation,
-} from './auth';
+export { authApi, getMe, useLogOutMutation, useLoginMutation, useRegisterMutation } from './auth';
 export {
   avatarApi,
   useGetAvatarQuery,
@@ -49,13 +42,7 @@ export {
   useRemoveImageMutation,
   useUploadImagesMutation,
 } from './image';
-export {
-  mapApi,
-  uploadFile,
-  useGetMapQuery,
-  useRemoveMapMutation,
-  useUploadMapMutation,
-} from './map';
+export { mapApi, uploadFile, useGetMapQuery, useRemoveMapMutation } from './map';
 export { markerApi, useCreateMarkerMutation } from './marker';
 export {
   routeApi,

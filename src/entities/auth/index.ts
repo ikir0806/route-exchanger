@@ -1,7 +1,6 @@
 export {
   authApi,
   getMe,
-  useGetMeQuery,
   useLogOutMutation,
   useLoginMutation,
   useRegisterMutation,

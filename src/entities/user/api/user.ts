@@ -13,7 +13,7 @@ export const userApi = createApi({
   endpoints: (build) => ({
     updateUser: build.mutation<void, UpdateUserFormDto>({
       query: (values) => ({
-        url: '/users/me',
+        url: '/user/me',
         method: 'patch',
         body: values,
       }),
