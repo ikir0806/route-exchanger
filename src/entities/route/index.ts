@@ -10,6 +10,7 @@ export {
 } from './model/route.slice';
 
 export {
+  addMap,
   routeApi,
   useCreateRouteMutation,
   useFindByLocationQuery,

@@ -5,6 +5,7 @@ export interface Route {
   author: string;
   location: string;
   name: string;
+  mapFilename: string;
   description: string;
   markersArray?: Marker[];
 }

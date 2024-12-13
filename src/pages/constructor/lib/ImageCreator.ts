@@ -1,4 +1,4 @@
-import { uploadFile, UserFormDto } from '@entities';
+import { addMap, uploadFile, UserFormDto } from '@entities';
 import { Marker } from '@shared/models';
 import { Feature } from 'ol';
 import Map from 'ol/Map.js';
@@ -116,11 +116,11 @@ export class ImageCreator {
           const file = new File([blob], 'map-image.png', { type: 'image/png' });
 
           try {
-            await uploadFile(routeId, file);
-            resolve(); // Завершаем Promise при успешной загрузке
+            await uploadFile(routeId, file).then((res) => addMap(res.filename, routeId));
+            resolve();
           } catch (error) {
             console.error('Upload failed', error);
-            reject(error); // Завершаем Promise при ошибке
+            reject(error);
           }
         }, 'image/png');
       });

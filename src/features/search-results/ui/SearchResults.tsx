@@ -33,7 +33,10 @@ export const SearchResults = ({ loading }: { loading: boolean | null }) => {
           to={`/view/${result.id}`}
           key={result.id}
           className='card-item'>
-          <img src='./moscow.png' className='card-img' />
+          <img
+            src={`http://localhost:7777/uploads/maps/${result.mapFilename}`}
+            className='card-img'
+          />
           <div className='card-info'>
             <h2>{result.name}</h2>
             <p>{result.location}</p>

@@ -45,6 +45,7 @@ export {
 export { mapApi, uploadFile, useGetMapQuery, useRemoveMapMutation } from './map';
 export { markerApi, useCreateMarkerMutation } from './marker';
 export {
+  addMap,
   routeApi,
   useCreateRouteMutation,
   useFindByLocationQuery,
