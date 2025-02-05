@@ -2,9 +2,9 @@ import { AuthContext } from '@app/providers/AuthContext';
 import { useUpdateUserMutation } from '@entities';
 import { AuthChecker } from '@shared/lib/auth-checker/auth-checker';
 import { ConfigProvider, Input } from 'antd';
-import { FC, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 
-export const ProfileFields: FC = () => {
+export const ProfileFields = () => {
   const { user, setUser } = useContext(AuthContext);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [login, setLogin] = useState<string | undefined>(user?.login);

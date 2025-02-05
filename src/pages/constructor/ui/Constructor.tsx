@@ -75,6 +75,7 @@ export const Constructor: FC = () => {
         name: name,
         location: location,
         description: description,
+        username: user.login,
       },
       userId: user.id,
     })
@@ -94,6 +95,7 @@ export const Constructor: FC = () => {
                 (await uploadImages({
                   markerId: res.data,
                   options: resultMarker.imagesOptions,
+                  routeId: routeId.data,
                 })),
             );
           });

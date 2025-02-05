@@ -39,6 +39,7 @@ export {
 export {
   imageApi,
   useGetAllImagesQuery,
+  useGetImagesByRouteIdQuery,
   useRemoveImageMutation,
   useUploadImagesMutation,
 } from './image';

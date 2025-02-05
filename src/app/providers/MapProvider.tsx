@@ -19,8 +19,8 @@ const MapProvider = ({
   bounds,
   setBounds,
 }: {
-  bounds: LngLatBounds;
-  setBounds: (bounds: LngLatBounds) => void;
+  bounds?: LngLatBounds;
+  setBounds?: (bounds: LngLatBounds) => void;
 }) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -32,7 +32,10 @@ const MapProvider = ({
         <YMap
           zoomRounding='smooth'
           location={{
-            bounds: bounds,
+            bounds: bounds || [
+              [37, 55.75],
+              [38, 55.75],
+            ],
             duration: 500,
           }}
           behaviors={[
@@ -83,10 +86,11 @@ const MapProvider = ({
           <YMapListener
             layer='any'
             onDblClick={(_, e) => {
-              setBounds([
-                [e.coordinates[0] - 0.3, e.coordinates[1] + 0.3],
-                [e.coordinates[0] + 0.3, e.coordinates[1] - 0.3],
-              ]);
+              setBounds &&
+                setBounds([
+                  [e.coordinates[0] - 0.3, e.coordinates[1] + 0.3],
+                  [e.coordinates[0] + 0.3, e.coordinates[1] - 0.3],
+                ]);
               dispatch(
                 setCurrentMarker({
                   id: markers.length + 1,

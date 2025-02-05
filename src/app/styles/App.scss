@@ -355,15 +355,53 @@ body::after {
   border: 3px solid $main-color;
   height: 25vh;
   display: flex;
+  margin-bottom: 3vh;
+}
+
+.card-row {
+  height: 14vh;
+}
+
+.card-col {
+  height: 100%;
+  width: 20vw;
+}
+
+.card-map {
+  border-radius: 30px 0 0 30px;
 }
 
 .card-img {
-  border-radius: 30px 0 0 30px;
+  border-radius: 30px;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 
 .card-info {
   margin-left: 5vw;
   padding-top: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-footer {
+  display: flex;
+  align-self: flex-end;
+  margin: auto 1vw 1vh auto;
+  column-gap: 2vw;
+}
+
+.card-footer-wrp {
+  display: flex;
+  align-items: center;
+}
+
+.card-footer-img {
+  color: $main-color;
+  width: 2vw;
+  height: 2vh;
 }
 
 .card-empty {

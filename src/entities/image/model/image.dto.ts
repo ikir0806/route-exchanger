@@ -1,4 +1,4 @@
-import { UserFormDto } from './user.dto';
+import { UserFormDto } from '@entities';
 
 export interface ImageItemDto {
   filename: string;

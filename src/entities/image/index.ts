@@ -4,6 +4,7 @@ export type { ImageItemDto } from './model/image.dto';
 export {
   imageApi,
   useGetAllImagesQuery,
+  useGetImagesByRouteIdQuery,
   useRemoveImageMutation,
   useUploadImagesMutation,
 } from './api/image';

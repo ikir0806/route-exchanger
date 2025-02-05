@@ -3,7 +3,7 @@ import { makeAutoObservable } from 'mobx';
 
 interface Route {
   id: number;
-  author: string;
+  username: string;
   location: string;
   name: string;
   description: string;
